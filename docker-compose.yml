@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: trip_planner_db
+    restart: always
+    environment:
+      POSTGRES_DB: trip_planner
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: trip_planner_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - APP_ENV=dev
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgrespassword@db:5432/trip_planner
+      - JWT_SECRET=supersecretjwtsecretkeychangeinproduction123!
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
