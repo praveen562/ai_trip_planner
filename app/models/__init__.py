@@ -9,12 +9,16 @@ from app.models.enums import (
     UserRole,
 )
 from app.models.mixins import SoftDeleteMixin, TimestampMixin, UUIDMixin
+from app.models.trip import Trip
+from app.models.user import User
+from app.models.user_profile import UserProfile
 
-# Exporting core ORM layout configurations
 __all__ = [
+    # Mixins
     "UUIDMixin",
     "TimestampMixin",
     "SoftDeleteMixin",
+    # Enums
     "UserRole",
     "TripStatus",
     "TravelStyle",
@@ -23,4 +27,8 @@ __all__ = [
     "TransportMode",
     "NotificationType",
     "ActivityCategory",
+    # Models
+    "User",
+    "UserProfile",
+    "Trip",
 ]
