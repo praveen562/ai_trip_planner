@@ -36,6 +36,28 @@ class AuthenticationException(AppException):
         super().__init__(message=message, status_code=401, details=details)
 
 
+class ValidationException(AppException):
+    """Exception raised when domain-level input validation fails."""
+
+    def __init__(
+        self,
+        message: str = "Invalid input data.",
+        details: Any = None,
+    ):
+        super().__init__(message=message, status_code=400, details=details)
+
+
+class AuthorizationException(AppException):
+    """Exception raised when a user attempts to access a resource they do not own."""
+
+    def __init__(
+        self,
+        message: str = "You do not have permission to access this resource",
+        details: Any = None,
+    ):
+        super().__init__(message=message, status_code=403, details=details)
+
+
 class ExternalAPIException(AppException):
     """Exception raised when external integrations (Google, Weather, Gemini) fail."""
 

@@ -6,8 +6,10 @@ from app.core.config import settings
 from app.core.exceptions import AuthenticationException
 from app.db.session import get_db
 from app.models.user import User
+from app.repositories.trip_repository import TripRepository
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
+from app.services.trip_service import TripService
 
 # Use settings.API_V1_STR to dynamically format prefix
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/token")
@@ -42,3 +44,21 @@ async def get_current_user(
         return await service.get_current_user(token)
     except ValueError as exc:
         raise AuthenticationException(message=str(exc)) from exc
+
+
+def get_trip_repository(
+    db: AsyncSession = Depends(get_db),
+) -> TripRepository:
+    """
+    Return a TripRepository instance.
+    """
+    return TripRepository(db)
+
+
+def get_trip_service(
+    repository: TripRepository = Depends(get_trip_repository),
+) -> TripService:
+    """
+    Return a TripService instance.
+    """
+    return TripService(repository)

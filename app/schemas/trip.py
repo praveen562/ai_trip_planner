@@ -22,6 +22,8 @@ class TripUpdate(BaseModel):
     title: str | None = None
     source_location: str | None = None
     destination_location: str | None = None
+    start_date: date | None = None
+    end_date: date | None = None
     budget: Decimal | None = None
     notes: str | None = None
     status: TripStatus | None = None
