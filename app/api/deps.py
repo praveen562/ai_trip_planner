@@ -6,10 +6,12 @@ from app.core.config import settings
 from app.core.exceptions import AuthenticationException
 from app.db.session import get_db
 from app.models.user import User
+from app.repositories.expense_repository import ExpenseRepository
 from app.repositories.trip_repository import TripRepository
 from app.repositories.user_profile_repository import UserProfileRepository
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
+from app.services.expense_service import ExpenseService
 from app.services.trip_service import TripService
 from app.services.user_profile_service import UserProfileService
 
@@ -82,3 +84,23 @@ def get_user_profile_service(
     Return a UserProfileService instance.
     """
     return UserProfileService(repository)
+
+
+def get_expense_repository(
+    db: AsyncSession = Depends(get_db),
+) -> ExpenseRepository:
+    """
+    Return an ExpenseRepository instance.
+    """
+    return ExpenseRepository(db)
+
+
+def get_expense_service(
+    repository: ExpenseRepository = Depends(get_expense_repository),
+    trip_repository: TripRepository = Depends(get_trip_repository),
+    profile_repository: UserProfileRepository = Depends(get_user_profile_repository),
+) -> ExpenseService:
+    """
+    Return an ExpenseService instance.
+    """
+    return ExpenseService(repository, trip_repository, profile_repository)

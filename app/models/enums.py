@@ -30,12 +30,24 @@ class TravelStyle(StrEnum):
 class ExpenseCategory(StrEnum):
     """Budget grouping categories."""
 
-    ACCOMMODATION = "ACCOMMODATION"
-    TRANSPORT = "TRANSPORT"
     FOOD = "FOOD"
-    ACTIVITIES = "ACTIVITIES"
+    HOTEL = "HOTEL"
+    TRANSPORT = "TRANSPORT"
     SHOPPING = "SHOPPING"
-    MISC = "MISC"
+    ENTERTAINMENT = "ENTERTAINMENT"
+    ACTIVITIES = "ACTIVITIES"
+    MEDICAL = "MEDICAL"
+    MISCELLANEOUS = "MISCELLANEOUS"
+
+
+class PaymentMethod(StrEnum):
+    """Payment methods used to settle an expense."""
+
+    CASH = "CASH"
+    CARD = "CARD"
+    UPI = "UPI"
+    BANK_TRANSFER = "BANK_TRANSFER"
+    OTHER = "OTHER"
 
 
 class AccommodationType(StrEnum):

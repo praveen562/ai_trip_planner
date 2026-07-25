@@ -51,7 +51,6 @@ api_router.include_router(
 
 api_router.include_router(
     expenses.router,
-    prefix="/expenses",
     tags=["Expenses"],
 )
 
