@@ -3,14 +3,17 @@ from app.models.enums import (
     ActivityCategory,
     ExpenseCategory,
     Gender,
+    Mood,
     NotificationType,
     PaymentMethod,
     TransportMode,
     TravelStyle,
     TripStatus,
     UserRole,
+    Weather,
 )
 from app.models.expense import Expense
+from app.models.journal import Journal
 from app.models.mixins import SoftDeleteMixin, TimestampMixin, UUIDMixin
 from app.models.trip import Trip
 from app.models.user import User
@@ -32,9 +35,12 @@ __all__ = [
     "ActivityCategory",
     "Gender",
     "PaymentMethod",
+    "Mood",
+    "Weather",
     # Models
     "User",
     "UserProfile",
     "Trip",
     "Expense",
+    "Journal",
 ]

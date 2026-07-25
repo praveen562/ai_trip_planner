@@ -99,3 +99,30 @@ class Gender(StrEnum):
     FEMALE = "FEMALE"
     OTHER = "OTHER"
     PREFER_NOT_TO_SAY = "PREFER_NOT_TO_SAY"
+
+
+class Mood(StrEnum):
+    """Self-reported mood for a journal entry."""
+
+    EXCITED = "EXCITED"
+    HAPPY = "HAPPY"
+    PEACEFUL = "PEACEFUL"
+    TIRED = "TIRED"
+    ADVENTUROUS = "ADVENTUROUS"
+    STRESSED = "STRESSED"
+    ROMANTIC = "ROMANTIC"
+    GRATEFUL = "GRATEFUL"
+    OTHER = "OTHER"
+
+
+class Weather(StrEnum):
+    """Weather condition logged for a journal entry."""
+
+    SUNNY = "SUNNY"
+    CLOUDY = "CLOUDY"
+    RAINY = "RAINY"
+    SNOWY = "SNOWY"
+    WINDY = "WINDY"
+    STORMY = "STORMY"
+    FOGGY = "FOGGY"
+    OTHER = "OTHER"

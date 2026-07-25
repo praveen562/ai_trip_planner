@@ -5,7 +5,7 @@ from app.api.v1.endpoints import (
     auth,
     expenses,
     health,
-    journals,
+    journal,
     packing,
     profile,
     trips,
@@ -55,8 +55,7 @@ api_router.include_router(
 )
 
 api_router.include_router(
-    journals.router,
-    prefix="/journals",
+    journal.router,
     tags=["Journal"],
 )
 

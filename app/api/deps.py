@@ -7,11 +7,13 @@ from app.core.exceptions import AuthenticationException
 from app.db.session import get_db
 from app.models.user import User
 from app.repositories.expense_repository import ExpenseRepository
+from app.repositories.journal_repository import JournalRepository
 from app.repositories.trip_repository import TripRepository
 from app.repositories.user_profile_repository import UserProfileRepository
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
 from app.services.expense_service import ExpenseService
+from app.services.journal_service import JournalService
 from app.services.trip_service import TripService
 from app.services.user_profile_service import UserProfileService
 
@@ -104,3 +106,22 @@ def get_expense_service(
     Return an ExpenseService instance.
     """
     return ExpenseService(repository, trip_repository, profile_repository)
+
+
+def get_journal_repository(
+    db: AsyncSession = Depends(get_db),
+) -> JournalRepository:
+    """
+    Return a JournalRepository instance.
+    """
+    return JournalRepository(db)
+
+
+def get_journal_service(
+    repository: JournalRepository = Depends(get_journal_repository),
+    trip_repository: TripRepository = Depends(get_trip_repository),
+) -> JournalService:
+    """
+    Return a JournalService instance.
+    """
+    return JournalService(repository, trip_repository)
