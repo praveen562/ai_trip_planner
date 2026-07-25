@@ -8,13 +8,22 @@ from app.core.config import settings
 from app.core.exceptions import AppException
 from app.core.logging import setup_logging
 from app.core.middleware import RequestLoggingMiddleware
+from contextlib import asynccontextmanager
+from app.db.init_db import init_db
 
 # Initialize structlog configurations
 setup_logging()
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db()
+    yield
+
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.APP_VERSION,
+    lifespan=lifespan,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -106,4 +115,4 @@ async def root() -> dict[str, str | dict[str, str]]:
 
 
 # Register versioned API router namespace
-app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(api_router)

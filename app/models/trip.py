@@ -80,18 +80,12 @@ class Trip(UUIDMixin, TimestampMixin, SoftDeleteMixin, Base):
         lazy="selectin",
     )
 
-    itineraries = relationship(
-        "Itinerary",
-        back_populates="trip",
-        cascade="all, delete-orphan",
-        lazy="selectin",
-    )
-    trips = relationship(
-        "Trip",
-        back_populates="user",
-        cascade="all, delete-orphan",
-        lazy="selectin",
-    )
+    #itineraries = relationship(
+     #   "Itinerary",
+      #  back_populates="trip",
+       # cascade="all, delete-orphan",
+        #lazy="selectin",
+    #)
 
     def __repr__(self) -> str:
         return (

@@ -60,10 +60,11 @@ class User(UUIDMixin, TimestampMixin, SoftDeleteMixin, Base):
 
     # Relationships
     profile = relationship(
-        "UserProfile",
-        back_populates="user",
-        uselist=False,
-        lazy="selectin",
+    "UserProfile",
+    back_populates="user",
+    uselist=False,
+    cascade="all, delete-orphan",
+    lazy="selectin",
     )
 
     trips = relationship(
@@ -73,32 +74,26 @@ class User(UUIDMixin, TimestampMixin, SoftDeleteMixin, Base):
         lazy="selectin",
     )
 
-    chat_sessions = relationship(
-        "ChatSession",
-        back_populates="user",
-        cascade="all, delete-orphan",
-        lazy="selectin",
-    )
+    #chat_sessions = relationship(
+     #   "ChatSession",
+     #   back_populates="user",
+     #   cascade="all, delete-orphan",
+    #    lazy="selectin",
+    #)
 
-    notifications = relationship(
-        "Notification",
-        back_populates="user",
-        cascade="all, delete-orphan",
-        lazy="selectin",
-    )
+    #notifications = relationship(
+    #    "Notification",
+      #  back_populates="user",
+      #  cascade="all, delete-orphan",
+       # lazy="selectin",
+    #)
 
-    analytics = relationship(
-        "UserAnalytics",
-        back_populates="user",
-        uselist=False,
-        lazy="selectin",
-    )
-    profile = relationship(
-        "UserProfile",
-        back_populates="user",
-        uselist=False,
-        cascade="all, delete-orphan",
-    )
+    #analytics = relationship(
+     #   "UserAnalytics",
+      #  back_populates="user",
+       # uselist=False,
+       # lazy="selectin",
+    #)
 
     def __repr__(self) -> str:
         return f"User(id={self.id}, " f"email='{self.email}', " f"role='{self.role}')"
