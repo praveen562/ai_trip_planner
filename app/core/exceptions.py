@@ -58,6 +58,17 @@ class AuthorizationException(AppException):
         super().__init__(message=message, status_code=403, details=details)
 
 
+class ConflictException(AppException):
+    """Exception raised when a request conflicts with an existing resource state."""
+
+    def __init__(
+        self,
+        message: str = "Resource already exists.",
+        details: Any = None,
+    ):
+        super().__init__(message=message, status_code=409, details=details)
+
+
 class ExternalAPIException(AppException):
     """Exception raised when external integrations (Google, Weather, Gemini) fail."""
 

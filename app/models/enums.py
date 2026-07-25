@@ -78,3 +78,12 @@ class ActivityCategory(StrEnum):
     RELAXATION = "RELAXATION"
     TRANSIT = "TRANSIT"
     SHOPPING = "SHOPPING"
+
+
+class Gender(StrEnum):
+    """Self-identified gender options for a user profile."""
+
+    MALE = "MALE"
+    FEMALE = "FEMALE"
+    OTHER = "OTHER"
+    PREFER_NOT_TO_SAY = "PREFER_NOT_TO_SAY"

@@ -7,9 +7,11 @@ from app.core.exceptions import AuthenticationException
 from app.db.session import get_db
 from app.models.user import User
 from app.repositories.trip_repository import TripRepository
+from app.repositories.user_profile_repository import UserProfileRepository
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
 from app.services.trip_service import TripService
+from app.services.user_profile_service import UserProfileService
 
 # Use settings.API_V1_STR to dynamically format prefix
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/token")
@@ -62,3 +64,21 @@ def get_trip_service(
     Return a TripService instance.
     """
     return TripService(repository)
+
+
+def get_user_profile_repository(
+    db: AsyncSession = Depends(get_db),
+) -> UserProfileRepository:
+    """
+    Return a UserProfileRepository instance.
+    """
+    return UserProfileRepository(db)
+
+
+def get_user_profile_service(
+    repository: UserProfileRepository = Depends(get_user_profile_repository),
+) -> UserProfileService:
+    """
+    Return a UserProfileService instance.
+    """
+    return UserProfileService(repository)

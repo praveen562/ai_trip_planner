@@ -7,6 +7,7 @@ from app.api.v1.endpoints import (
     health,
     journals,
     packing,
+    profile,
     trips,
     users,
 )
@@ -34,6 +35,12 @@ api_router.include_router(
     trips.router,
     prefix="/trips",
     tags=["Trips"],
+)
+
+api_router.include_router(
+    profile.router,
+    prefix="/profile",
+    tags=["Profile"],
 )
 
 api_router.include_router(

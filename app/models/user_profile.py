@@ -1,11 +1,14 @@
-from sqlalchemy import ForeignKey, String
+from datetime import date
+
+from sqlalchemy import Date, Enum, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
-from app.models.mixins import TimestampMixin, UUIDMixin
+from app.models.enums import Gender
+from app.models.mixins import SoftDeleteMixin, TimestampMixin, UUIDMixin
 
 
-class UserProfile(UUIDMixin, TimestampMixin, Base):
+class UserProfile(UUIDMixin, TimestampMixin, SoftDeleteMixin, Base):
     """
     Stores user profile information separate
     from authentication data.
@@ -19,18 +22,28 @@ class UserProfile(UUIDMixin, TimestampMixin, Base):
         nullable=False,
     )
 
+    full_name: Mapped[str] = mapped_column(
+        String(150),
+        nullable=False,
+    )
+
     phone_number: Mapped[str | None] = mapped_column(
         String(20),
         nullable=True,
     )
 
-    profile_picture: Mapped[str | None] = mapped_column(
-        String(500),
+    date_of_birth: Mapped[date | None] = mapped_column(
+        Date,
         nullable=True,
     )
 
-    bio: Mapped[str | None] = mapped_column(
-        String(500),
+    gender: Mapped[Gender | None] = mapped_column(
+        Enum(Gender),
+        nullable=True,
+    )
+
+    nationality: Mapped[str | None] = mapped_column(
+        String(100),
         nullable=True,
     )
 
@@ -44,9 +57,34 @@ class UserProfile(UUIDMixin, TimestampMixin, Base):
         default="INR",
     )
 
-    timezone: Mapped[str | None] = mapped_column(
-        String(100),
-        default="Asia/Kolkata",
+    emergency_contact_name: Mapped[str | None] = mapped_column(
+        String(150),
+        nullable=True,
+    )
+
+    emergency_contact_phone: Mapped[str | None] = mapped_column(
+        String(20),
+        nullable=True,
+    )
+
+    dietary_preferences: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    accessibility_requirements: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    bio: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    profile_image_url: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
     )
 
     user = relationship(
