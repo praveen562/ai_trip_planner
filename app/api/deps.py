@@ -8,12 +8,14 @@ from app.db.session import get_db
 from app.models.user import User
 from app.repositories.expense_repository import ExpenseRepository
 from app.repositories.journal_repository import JournalRepository
+from app.repositories.packing_repository import PackingRepository
 from app.repositories.trip_repository import TripRepository
 from app.repositories.user_profile_repository import UserProfileRepository
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
 from app.services.expense_service import ExpenseService
 from app.services.journal_service import JournalService
+from app.services.packing_service import PackingService
 from app.services.trip_service import TripService
 from app.services.user_profile_service import UserProfileService
 
@@ -125,3 +127,22 @@ def get_journal_service(
     Return a JournalService instance.
     """
     return JournalService(repository, trip_repository)
+
+
+def get_packing_repository(
+    db: AsyncSession = Depends(get_db),
+) -> PackingRepository:
+    """
+    Return a PackingRepository instance.
+    """
+    return PackingRepository(db)
+
+
+def get_packing_service(
+    repository: PackingRepository = Depends(get_packing_repository),
+    trip_repository: TripRepository = Depends(get_trip_repository),
+) -> PackingService:
+    """
+    Return a PackingService instance.
+    """
+    return PackingService(repository, trip_repository)

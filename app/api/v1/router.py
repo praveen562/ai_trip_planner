@@ -61,6 +61,5 @@ api_router.include_router(
 
 api_router.include_router(
     packing.router,
-    prefix="/packing",
     tags=["Packing"],
 )

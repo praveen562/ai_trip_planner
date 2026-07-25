@@ -5,6 +5,8 @@ from app.models.enums import (
     Gender,
     Mood,
     NotificationType,
+    PackingCategory,
+    PackingPriority,
     PaymentMethod,
     TransportMode,
     TravelStyle,
@@ -15,6 +17,7 @@ from app.models.enums import (
 from app.models.expense import Expense
 from app.models.journal import Journal
 from app.models.mixins import SoftDeleteMixin, TimestampMixin, UUIDMixin
+from app.models.packing_item import PackingItem
 from app.models.trip import Trip
 from app.models.user import User
 from app.models.user_profile import UserProfile
@@ -37,10 +40,13 @@ __all__ = [
     "PaymentMethod",
     "Mood",
     "Weather",
+    "PackingCategory",
+    "PackingPriority",
     # Models
     "User",
     "UserProfile",
     "Trip",
     "Expense",
     "Journal",
+    "PackingItem",
 ]

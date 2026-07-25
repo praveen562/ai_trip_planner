@@ -126,3 +126,26 @@ class Weather(StrEnum):
     STORMY = "STORMY"
     FOGGY = "FOGGY"
     OTHER = "OTHER"
+
+
+class PackingCategory(StrEnum):
+    """Category grouping for a packing checklist item."""
+
+    CLOTHING = "CLOTHING"
+    FOOTWEAR = "FOOTWEAR"
+    ELECTRONICS = "ELECTRONICS"
+    DOCUMENTS = "DOCUMENTS"
+    MEDICINE = "MEDICINE"
+    TOILETRIES = "TOILETRIES"
+    ACCESSORIES = "ACCESSORIES"
+    FOOD = "FOOD"
+    OTHER = "OTHER"
+
+
+class PackingPriority(StrEnum):
+    """Priority level for a packing checklist item."""
+
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    ESSENTIAL = "ESSENTIAL"
