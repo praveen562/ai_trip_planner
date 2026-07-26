@@ -15,6 +15,7 @@ from app.models.enums import (
     Weather,
 )
 from app.models.expense import Expense
+from app.models.itinerary import Itinerary
 from app.models.journal import Journal
 from app.models.mixins import SoftDeleteMixin, TimestampMixin, UUIDMixin
 from app.models.packing_item import PackingItem
@@ -49,4 +50,5 @@ __all__ = [
     "Expense",
     "Journal",
     "PackingItem",
+    "Itinerary",
 ]

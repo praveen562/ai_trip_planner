@@ -5,8 +5,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.core.exceptions import AuthenticationException
 from app.db.session import get_db
+from app.integrations.gemini_client import GeminiClient
 from app.models.user import User
 from app.repositories.expense_repository import ExpenseRepository
+from app.repositories.itinerary_repository import ItineraryRepository
 from app.repositories.journal_repository import JournalRepository
 from app.repositories.packing_repository import PackingRepository
 from app.repositories.trip_repository import TripRepository
@@ -14,6 +16,7 @@ from app.repositories.user_profile_repository import UserProfileRepository
 from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
 from app.services.expense_service import ExpenseService
+from app.services.itinerary_service import ItineraryService
 from app.services.journal_service import JournalService
 from app.services.packing_service import PackingService
 from app.services.trip_service import TripService
@@ -146,3 +149,42 @@ def get_packing_service(
     Return a PackingService instance.
     """
     return PackingService(repository, trip_repository)
+
+
+def get_itinerary_repository(
+    db: AsyncSession = Depends(get_db),
+) -> ItineraryRepository:
+    """
+    Return an ItineraryRepository instance.
+    """
+    return ItineraryRepository(db)
+
+
+def get_gemini_client() -> GeminiClient:
+    """
+    Return a GeminiClient instance.
+    """
+    return GeminiClient()
+
+
+def get_itinerary_service(
+    repository: ItineraryRepository = Depends(get_itinerary_repository),
+    trip_repository: TripRepository = Depends(get_trip_repository),
+    profile_repository: UserProfileRepository = Depends(get_user_profile_repository),
+    expense_repository: ExpenseRepository = Depends(get_expense_repository),
+    packing_repository: PackingRepository = Depends(get_packing_repository),
+    journal_repository: JournalRepository = Depends(get_journal_repository),
+    gemini_client: GeminiClient = Depends(get_gemini_client),
+) -> ItineraryService:
+    """
+    Return an ItineraryService instance.
+    """
+    return ItineraryService(
+        repository,
+        trip_repository,
+        profile_repository,
+        expense_repository,
+        packing_repository,
+        journal_repository,
+        gemini_client,
+    )

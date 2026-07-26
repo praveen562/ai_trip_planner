@@ -5,6 +5,7 @@ from app.api.v1.endpoints import (
     auth,
     expenses,
     health,
+    itinerary,
     journal,
     packing,
     profile,
@@ -62,4 +63,9 @@ api_router.include_router(
 api_router.include_router(
     packing.router,
     tags=["Packing"],
+)
+
+api_router.include_router(
+    itinerary.router,
+    tags=["Itinerary"],
 )
