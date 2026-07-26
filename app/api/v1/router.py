@@ -8,6 +8,7 @@ from app.api.v1.endpoints import (
     itinerary,
     journal,
     packing,
+    places,
     profile,
     trips,
     users,
@@ -75,4 +76,9 @@ api_router.include_router(
     weather.router,
     prefix="/trips",
     tags=["Weather"],
+)
+
+api_router.include_router(
+    places.router,
+    tags=["Places"],
 )

@@ -6,6 +6,7 @@ from app.core.config import settings
 from app.core.exceptions import AuthenticationException
 from app.db.session import get_db
 from app.integrations.gemini_client import GeminiClient
+from app.integrations.opentripmap_client import OpenTripMapClient
 from app.integrations.weather_client import WeatherClient
 from app.models.user import User
 from app.repositories.expense_repository import ExpenseRepository
@@ -20,6 +21,7 @@ from app.services.expense_service import ExpenseService
 from app.services.itinerary_service import ItineraryService
 from app.services.journal_service import JournalService
 from app.services.packing_service import PackingService
+from app.services.places_service import PlacesService
 from app.services.trip_service import TripService
 from app.services.user_profile_service import UserProfileService
 from app.services.weather_service import WeatherService
@@ -207,3 +209,20 @@ def get_weather_service(
     Return a WeatherService instance.
     """
     return WeatherService(trip_repository, weather_client)
+
+
+def get_opentripmap_client() -> OpenTripMapClient:
+    """
+    Return an OpenTripMapClient instance.
+    """
+    return OpenTripMapClient()
+
+
+def get_places_service(
+    trip_repository: TripRepository = Depends(get_trip_repository),
+    client: OpenTripMapClient = Depends(get_opentripmap_client),
+) -> PlacesService:
+    """
+    Return a PlacesService instance.
+    """
+    return PlacesService(trip_repository, client)

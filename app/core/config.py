@@ -21,6 +21,8 @@ class GlobalSettings(BaseSettings):
     OPENWEATHER_API_KEY: str | None = None
     WEATHER_API_KEY: str | None = None
     WEATHER_BASE_URL: str = "https://api.weatherapi.com/v1"
+    OPENTRIPMAP_API_KEY: str | None = None
+    OPENTRIPMAP_BASE_URL: str = "https://api.opentripmap.com/0.1/en/places"
 
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="ignore"
@@ -56,6 +58,7 @@ class ProductionSettings(GlobalSettings):
     GOOGLE_MAPS_API_KEY: str
     OPENWEATHER_API_KEY: str
     WEATHER_API_KEY: str
+    OPENTRIPMAP_API_KEY: str
 
 
 def get_settings() -> GlobalSettings:
