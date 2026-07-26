@@ -1,4 +1,3 @@
-from collections import defaultdict
 from datetime import date as date_type
 from datetime import datetime
 from typing import Any
@@ -53,60 +52,66 @@ class WeatherService:
         return trip
 
     @staticmethod
-    def _parse_daily_forecasts(raw: dict[str, Any]) -> list[DailyWeather]:
+    def _parse_astro_time(day_date: date_type, time_str: str | None) -> datetime | None:
         """
-        Group the provider's 3-hour interval forecast entries into
-        one DailyWeather summary per calendar day.
+        Combine a WeatherAPI-style 12-hour time string (e.g. "06:15 AM")
+        with the forecast day's date into a full datetime.
         """
-        city_info = raw.get("city", {})
-        sunrise_ts = city_info.get("sunrise")
-        sunset_ts = city_info.get("sunset")
-        sunrise = datetime.utcfromtimestamp(sunrise_ts) if sunrise_ts else None
-        sunset = datetime.utcfromtimestamp(sunset_ts) if sunset_ts else None
+        if not time_str:
+            return None
+        try:
+            parsed_time = datetime.strptime(time_str, "%I:%M %p").time()
+        except ValueError:
+            return None
+        return datetime.combine(day_date, parsed_time)
 
-        grouped: dict[date_type, list[dict[str, Any]]] = defaultdict(list)
-        for entry in raw.get("list", []):
-            entry_dt = datetime.utcfromtimestamp(entry["dt"])
-            grouped[entry_dt.date()].append(entry)
+    @staticmethod
+    def _parse_daily_forecasts(raw: dict[str, Any]) -> tuple[str, list[DailyWeather]]:
+        """
+        Parse a WeatherAPI.com forecast.json payload into a location
+        name and one DailyWeather entry per forecast day.
+        """
+        location_name = raw.get("location", {}).get("name", "")
+        forecast_days = raw.get("forecast", {}).get("forecastday", [])
 
         daily_forecasts: list[DailyWeather] = []
-        for day, entries in sorted(grouped.items()):
-            temps = [entry["main"]["temp"] for entry in entries]
-            feels_like_values = [entry["main"]["feels_like"] for entry in entries]
-            humidity_values = [entry["main"]["humidity"] for entry in entries]
-            wind_speeds = [entry.get("wind", {}).get("speed", 0.0) for entry in entries]
-            rain_probabilities = [entry.get("pop", 0.0) for entry in entries]
-
-            # Use the entry closest to midday as the day's headline condition.
-            representative = min(
-                entries,
-                key=lambda entry: abs(datetime.utcfromtimestamp(entry["dt"]).hour - 12),
-            )
-            weather_info = representative.get("weather", [{}])[0]
+        for forecast_day in forecast_days:
+            day_date = date_type.fromisoformat(forecast_day["date"])
+            day = forecast_day.get("day", {})
+            astro = forecast_day.get("astro", {})
+            condition = day.get("condition", {})
 
             daily_forecasts.append(
                 DailyWeather(
-                    date=day,
-                    temperature_min=min(temps),
-                    temperature_max=max(temps),
-                    feels_like=sum(feels_like_values) / len(feels_like_values),
-                    humidity=round(sum(humidity_values) / len(humidity_values)),
-                    wind_speed=sum(wind_speeds) / len(wind_speeds),
-                    weather=weather_info.get("main", "Unknown"),
-                    weather_description=weather_info.get("description", ""),
-                    icon=weather_info.get("icon", ""),
-                    rain_probability=round(max(rain_probabilities) * 100, 1),
-                    sunrise=sunrise,
-                    sunset=sunset,
+                    date=day_date,
+                    temperature_min=day.get("mintemp_c", 0.0),
+                    temperature_max=day.get("maxtemp_c", 0.0),
+                    # WeatherAPI.com has no daily "feels like" field;
+                    # avgtemp_c is used as the closest available proxy.
+                    feels_like=day.get("avgtemp_c", 0.0),
+                    humidity=round(day.get("avghumidity", 0.0)),
+                    wind_speed=day.get("maxwind_kph", 0.0),
+                    weather=condition.get("text", "Unknown"),
+                    weather_description=condition.get("text", ""),
+                    icon=condition.get("icon", ""),
+                    rain_probability=float(day.get("daily_chance_of_rain", 0.0)),
+                    sunrise=WeatherService._parse_astro_time(
+                        day_date, astro.get("sunrise")
+                    ),
+                    sunset=WeatherService._parse_astro_time(
+                        day_date, astro.get("sunset")
+                    ),
                 )
             )
 
-        return daily_forecasts
+        return location_name, daily_forecasts
 
-    async def _fetch_daily_forecasts(self, trip: Trip) -> list[DailyWeather]:
+    async def _fetch_daily_forecasts(
+        self, trip: Trip
+    ) -> tuple[str, list[DailyWeather]]:
         """
         Call the weather client for a trip's destination and parse
-        the response into per-day forecasts.
+        the response into a location name and per-day forecasts.
         """
         raw = await self.weather_client.get_forecast(trip.destination_location)
         return self._parse_daily_forecasts(raw)
@@ -117,7 +122,8 @@ class WeatherService:
         the given user.
         """
         trip = await self._get_owned_trip(user_id, trip_id)
-        return await self._fetch_daily_forecasts(trip)
+        _, days = await self._fetch_daily_forecasts(trip)
+        return days
 
     async def get_trip_weather(self, user_id: UUID, trip_id: UUID) -> WeatherForecast:
         """
@@ -125,8 +131,10 @@ class WeatherService:
         the given user.
         """
         trip = await self._get_owned_trip(user_id, trip_id)
-        days = await self._fetch_daily_forecasts(trip)
-        return WeatherForecast(destination=trip.destination_location, days=days)
+        location_name, days = await self._fetch_daily_forecasts(trip)
+        return WeatherForecast(
+            destination=location_name or trip.destination_location, days=days
+        )
 
     async def get_today_weather(self, user_id: UUID, trip_id: UUID) -> WeatherResponse:
         """
@@ -134,14 +142,16 @@ class WeatherService:
         user.
         """
         trip = await self._get_owned_trip(user_id, trip_id)
-        days = await self._fetch_daily_forecasts(trip)
+        location_name, days = await self._fetch_daily_forecasts(trip)
 
         if not days:
             raise ExternalAPIException(
                 "No weather data available for this destination."
             )
 
-        return WeatherResponse(destination=trip.destination_location, today=days[0])
+        return WeatherResponse(
+            destination=location_name or trip.destination_location, today=days[0]
+        )
 
     async def get_weather_summary(
         self, user_id: UUID, trip_id: UUID
@@ -152,7 +162,7 @@ class WeatherService:
         the given user.
         """
         trip = await self._get_owned_trip(user_id, trip_id)
-        days = await self._fetch_daily_forecasts(trip)
+        location_name, days = await self._fetch_daily_forecasts(trip)
 
         if not days:
             raise ExternalAPIException(
@@ -170,7 +180,7 @@ class WeatherService:
         worst_day = max(days, key=lambda day: day.rain_probability)
 
         return ForecastSummary(
-            destination=trip.destination_location,
+            destination=location_name or trip.destination_location,
             best_day=f"Day {days.index(best_day) + 1}",
             worst_day=f"Day {days.index(worst_day) + 1}",
             average_temperature=round(average_temperature, 1),

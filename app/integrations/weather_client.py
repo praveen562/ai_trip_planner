@@ -12,12 +12,13 @@ logger = structlog.get_logger()
 WEATHER_REQUEST_TIMEOUT_SECONDS = 30.0
 WEATHER_MAX_RETRIES = 2
 WEATHER_RETRY_BACKOFF_SECONDS = 1.0
+WEATHER_FORECAST_DAYS = 5
 
 
 class WeatherClient:
     """
     Thin client responsible for all direct communication with the
-    external weather provider (OpenWeatherMap). Handles API key
+    external weather provider (WeatherAPI.com). Handles API key
     injection, timeouts, retries for transient failures, and
     translates every provider-side failure into the application's
     exception hierarchy.
@@ -27,24 +28,25 @@ class WeatherClient:
     """
 
     def __init__(self) -> None:
-        self.api_key = settings.OPENWEATHER_API_KEY
+        self.api_key = settings.WEATHER_API_KEY
         self.base_url = settings.WEATHER_BASE_URL
 
     async def get_forecast(self, destination: str) -> dict[str, Any]:
         """
-        Fetch the 5-day/3-hour forecast for a destination (city name).
+        Fetch the multi-day forecast for a destination (city name).
         Returns the raw provider payload as a dict.
         """
         if not self.api_key:
             raise ExternalAPIException(
-                "The weather service is not configured. "
-                "Please set OPENWEATHER_API_KEY."
+                "The weather service is not configured. Please set WEATHER_API_KEY."
             )
 
         params = {
+            "key": self.api_key,
             "q": destination,
-            "appid": self.api_key,
-            "units": "metric",
+            "days": WEATHER_FORECAST_DAYS,
+            "aqi": "no",
+            "alerts": "no",
         }
 
         last_exc: ExternalAPIException | None = None
@@ -55,12 +57,12 @@ class WeatherClient:
                     timeout=WEATHER_REQUEST_TIMEOUT_SECONDS
                 ) as client:
                     response = await client.get(
-                        f"{self.base_url}/forecast", params=params
+                        f"{self.base_url}/forecast.json", params=params
                     )
             except httpx.TimeoutException as exc:
                 logger.warning("Weather API request timed out", attempt=attempt)
                 last_exc = ExternalAPIException(
-                    "The weather service took too long to respond. " "Please try again."
+                    "The weather service took too long to respond. Please try again."
                 )
                 if attempt < WEATHER_MAX_RETRIES:
                     await asyncio.sleep(WEATHER_RETRY_BACKOFF_SECONDS * (attempt + 1))
@@ -81,7 +83,13 @@ class WeatherClient:
                     "The weather service rejected the request credentials."
                 )
 
-            if response.status_code == 404:
+            if response.status_code == 400:
+                # WeatherAPI.com returns 400 for an invalid/unrecognized
+                # location (e.g. error code 1006), rather than a 404.
+                logger.warning(
+                    "Weather API rejected the request",
+                    destination=destination,
+                )
                 raise ExternalAPIException(
                     f"Weather data could not be found for '{destination}'."
                 )
