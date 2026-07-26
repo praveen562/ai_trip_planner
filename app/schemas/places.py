@@ -10,6 +10,7 @@ class PlaceResponse(BaseModel):
     xid: str
     name: str
     category: str | None
+    categories: list[str]
     coordinates: PlaceCoordinates
     image: str | None
     wikipedia: str | None
@@ -18,4 +19,6 @@ class PlaceResponse(BaseModel):
 
 class NearbyPlacesResponse(BaseModel):
     destination: str
+    radius: int
+    count: int
     places: list[PlaceResponse]
