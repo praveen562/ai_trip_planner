@@ -6,6 +6,7 @@ from app.core.config import settings
 from app.core.exceptions import AuthenticationException
 from app.db.session import get_db
 from app.integrations.gemini_client import GeminiClient
+from app.integrations.weather_client import WeatherClient
 from app.models.user import User
 from app.repositories.expense_repository import ExpenseRepository
 from app.repositories.itinerary_repository import ItineraryRepository
@@ -21,6 +22,7 @@ from app.services.journal_service import JournalService
 from app.services.packing_service import PackingService
 from app.services.trip_service import TripService
 from app.services.user_profile_service import UserProfileService
+from app.services.weather_service import WeatherService
 
 # Use settings.API_V1_STR to dynamically format prefix
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/token")
@@ -188,3 +190,20 @@ def get_itinerary_service(
         journal_repository,
         gemini_client,
     )
+
+
+def get_weather_client() -> WeatherClient:
+    """
+    Return a WeatherClient instance.
+    """
+    return WeatherClient()
+
+
+def get_weather_service(
+    trip_repository: TripRepository = Depends(get_trip_repository),
+    weather_client: WeatherClient = Depends(get_weather_client),
+) -> WeatherService:
+    """
+    Return a WeatherService instance.
+    """
+    return WeatherService(trip_repository, weather_client)

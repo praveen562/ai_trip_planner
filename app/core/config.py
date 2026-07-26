@@ -19,6 +19,7 @@ class GlobalSettings(BaseSettings):
     GEMINI_API_KEY: str | None = None
     GOOGLE_MAPS_API_KEY: str | None = None
     OPENWEATHER_API_KEY: str | None = None
+    WEATHER_BASE_URL: str = "https://api.openweathermap.org/data/2.5"
 
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="ignore"

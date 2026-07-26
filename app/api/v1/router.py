@@ -11,6 +11,7 @@ from app.api.v1.endpoints import (
     profile,
     trips,
     users,
+    weather,
 )
 
 api_router = APIRouter()
@@ -68,4 +69,10 @@ api_router.include_router(
 api_router.include_router(
     itinerary.router,
     tags=["Itinerary"],
+)
+
+api_router.include_router(
+    weather.router,
+    prefix="/trips",
+    tags=["Weather"],
 )
