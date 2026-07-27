@@ -1,3 +1,4 @@
+import asyncio
 from typing import Any
 from uuid import UUID
 
@@ -7,6 +8,7 @@ from app.core.exceptions import (
     NotFoundException,
 )
 from app.integrations.opentripmap_client import OpenTripMapClient
+from app.integrations.unsplash_client import BaseImageClient
 from app.models.trip import Trip
 from app.repositories.trip_repository import TripRepository
 from app.schemas.places import NearbyPlacesResponse, PlaceCoordinates, PlaceResponse
@@ -69,9 +71,11 @@ class PlacesService:
         self,
         trip_repository: TripRepository,
         client: OpenTripMapClient,
+        image_client: BaseImageClient,
     ):
         self.trip_repository = trip_repository
         self.client = client
+        self.image_client = image_client
 
     async def _get_owned_trip(self, user_id: UUID, trip_id: UUID) -> Trip:
         """
@@ -310,6 +314,8 @@ class PlacesService:
         entries = self._sort_entries(entries)
         places = [place for place, _ in entries][:limit]
 
+        await self._enrich_with_images(places, destination=trip.destination_location)
+
         return NearbyPlacesResponse(
             destination=trip.destination_location,
             radius=radius,
@@ -317,11 +323,41 @@ class PlacesService:
             places=places,
         )
 
+    async def _enrich_with_images(
+        self, places: list[PlaceResponse], destination: str | None = None
+    ) -> None:
+        """
+        Fetch an Unsplash (or other configured provider) image for
+        each place concurrently, mutating each PlaceResponse's
+        image_url in place. Only called on the final, already
+        filtered/sorted/limited list -- never on the raw provider
+        results -- to keep the number of image lookups bounded.
+
+        A failed or missing image lookup never raises; it just
+        leaves image_url as None (return_exceptions=True guards
+        against any lookup that somehow still raises).
+        """
+        if not places:
+            return
+
+        tasks = [
+            self.image_client.search_image(place.name, destination) for place in places
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        for place, result in zip(places, results, strict=True):
+            place.image_url = result if isinstance(result, str) else None
+
     async def get_place_details(self, xid: str) -> PlaceResponse:
         """
         Retrieve full details for a single place by its OpenTripMap
         XID. Not trip-scoped, so no ownership check applies. This is
-        the only place where description/image/wikipedia are fetched.
+        the only place where description/image/wikipedia are fetched
+        from OpenTripMap; image_url is additionally enriched from the
+        image provider (no destination context is available here, so
+        only the place name is used for the search).
         """
         raw = await self.client.get_place_details(xid)
-        return self._parse_place_details(raw)
+        place = self._parse_place_details(raw)
+        place.image_url = await self.image_client.search_image(place.name)
+        return place

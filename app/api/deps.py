@@ -7,6 +7,7 @@ from app.core.exceptions import AuthenticationException
 from app.db.session import get_db
 from app.integrations.gemini_client import GeminiClient
 from app.integrations.opentripmap_client import OpenTripMapClient
+from app.integrations.unsplash_client import BaseImageClient, UnsplashClient
 from app.integrations.weather_client import WeatherClient
 from app.models.user import User
 from app.repositories.expense_repository import ExpenseRepository
@@ -218,11 +219,29 @@ def get_opentripmap_client() -> OpenTripMapClient:
     return OpenTripMapClient()
 
 
+_unsplash_client_singleton: UnsplashClient | None = None
+
+
+def get_unsplash_client() -> BaseImageClient:
+    """
+    Return a shared UnsplashClient instance. Kept as a singleton (not
+    a fresh instance per request) so its in-memory image cache
+    persists across requests -- repeated attraction lookups across
+    trips/users to the same destination reuse cached results instead
+    of re-querying Unsplash every time.
+    """
+    global _unsplash_client_singleton
+    if _unsplash_client_singleton is None:
+        _unsplash_client_singleton = UnsplashClient()
+    return _unsplash_client_singleton
+
+
 def get_places_service(
     trip_repository: TripRepository = Depends(get_trip_repository),
     client: OpenTripMapClient = Depends(get_opentripmap_client),
+    image_client: BaseImageClient = Depends(get_unsplash_client),
 ) -> PlacesService:
     """
     Return a PlacesService instance.
     """
-    return PlacesService(trip_repository, client)
+    return PlacesService(trip_repository, client, image_client)

@@ -23,6 +23,8 @@ class GlobalSettings(BaseSettings):
     WEATHER_BASE_URL: str = "https://api.weatherapi.com/v1"
     OPENTRIPMAP_API_KEY: str | None = None
     OPENTRIPMAP_BASE_URL: str = "https://api.opentripmap.com/0.1/en/places"
+    UNSPLASH_ACCESS_KEY: str | None = None
+    UNSPLASH_BASE_URL: str = "https://api.unsplash.com"
 
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="ignore"
