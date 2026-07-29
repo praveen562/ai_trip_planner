@@ -10,6 +10,7 @@ from app.api.v1.endpoints import (
     packing,
     places,
     profile,
+    route,
     trip_places,
     trips,
     users,
@@ -87,4 +88,10 @@ api_router.include_router(
 api_router.include_router(
     trip_places.router,
     tags=["Saved Places"],
+)
+
+api_router.include_router(
+    route.router,
+    prefix="/trips",
+    tags=["Route"],
 )

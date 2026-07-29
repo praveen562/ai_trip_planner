@@ -51,13 +51,22 @@ class TripPlaceRepository:
 
     async def get_all_for_trip(self, trip_id: UUID) -> list[TripPlace]:
         """
-        Return all active saved places belonging to a specific trip.
+        Return all active saved places belonging to a specific trip,
+        ordered by save time (oldest first).
+
+        Postgres does not guarantee row order without an explicit
+        ORDER BY. This ordering is relied on by RouteService, which
+        treats this list's order as "the order places were saved" --
+        without it, route legs could silently connect places in a
+        non-deterministic order.
         """
         result = await self.db.execute(
-            select(TripPlace).where(
+            select(TripPlace)
+            .where(
                 TripPlace.trip_id == trip_id,
                 TripPlace.is_deleted.is_(False),
             )
+            .order_by(TripPlace.created_at)
         )
         return list(result.scalars().all())
 

@@ -7,6 +7,7 @@ from app.core.exceptions import AuthenticationException
 from app.db.session import get_db
 from app.integrations.gemini_client import GeminiClient
 from app.integrations.opentripmap_client import OpenTripMapClient
+from app.integrations.osrm_client import OSRMClient
 from app.integrations.unsplash_client import BaseImageClient, UnsplashClient
 from app.integrations.weather_client import WeatherClient
 from app.models.user import User
@@ -24,6 +25,7 @@ from app.services.itinerary_service import ItineraryService
 from app.services.journal_service import JournalService
 from app.services.packing_service import PackingService
 from app.services.places_service import PlacesService
+from app.services.route_service import RouteService
 from app.services.trip_place_service import TripPlaceService
 from app.services.trip_service import TripService
 from app.services.user_profile_service import UserProfileService
@@ -266,3 +268,21 @@ def get_trip_place_service(
     Return a TripPlaceService instance.
     """
     return TripPlaceService(repository, trip_repository)
+
+
+def get_osrm_client() -> OSRMClient:
+    """
+    Return an OSRMClient instance.
+    """
+    return OSRMClient()
+
+
+def get_route_service(
+    trip_repository: TripRepository = Depends(get_trip_repository),
+    trip_place_repository: TripPlaceRepository = Depends(get_trip_place_repository),
+    osrm_client: OSRMClient = Depends(get_osrm_client),
+) -> RouteService:
+    """
+    Return a RouteService instance.
+    """
+    return RouteService(trip_repository, trip_place_repository, osrm_client)

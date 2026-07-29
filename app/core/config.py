@@ -25,6 +25,10 @@ class GlobalSettings(BaseSettings):
     OPENTRIPMAP_BASE_URL: str = "https://api.opentripmap.com/0.1/en/places"
     UNSPLASH_ACCESS_KEY: str | None = None
     UNSPLASH_BASE_URL: str = "https://api.unsplash.com"
+    OSRM_BASE_URL: str = "http://router.project-osrm.org"
+    OSRM_TIMEOUT: float = 30.0
+    OSRM_MAX_RETRIES: int = 2
+    OSRM_RETRY_BACKOFF: float = 1.0
 
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="ignore"
