@@ -14,6 +14,7 @@ from app.repositories.expense_repository import ExpenseRepository
 from app.repositories.itinerary_repository import ItineraryRepository
 from app.repositories.journal_repository import JournalRepository
 from app.repositories.packing_repository import PackingRepository
+from app.repositories.trip_place_repository import TripPlaceRepository
 from app.repositories.trip_repository import TripRepository
 from app.repositories.user_profile_repository import UserProfileRepository
 from app.repositories.user_repository import UserRepository
@@ -23,6 +24,7 @@ from app.services.itinerary_service import ItineraryService
 from app.services.journal_service import JournalService
 from app.services.packing_service import PackingService
 from app.services.places_service import PlacesService
+from app.services.trip_place_service import TripPlaceService
 from app.services.trip_service import TripService
 from app.services.user_profile_service import UserProfileService
 from app.services.weather_service import WeatherService
@@ -245,3 +247,22 @@ def get_places_service(
     Return a PlacesService instance.
     """
     return PlacesService(trip_repository, client, image_client)
+
+
+def get_trip_place_repository(
+    db: AsyncSession = Depends(get_db),
+) -> TripPlaceRepository:
+    """
+    Return a TripPlaceRepository instance.
+    """
+    return TripPlaceRepository(db)
+
+
+def get_trip_place_service(
+    repository: TripPlaceRepository = Depends(get_trip_place_repository),
+    trip_repository: TripRepository = Depends(get_trip_repository),
+) -> TripPlaceService:
+    """
+    Return a TripPlaceService instance.
+    """
+    return TripPlaceService(repository, trip_repository)
