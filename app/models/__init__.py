@@ -20,6 +20,7 @@ from app.models.journal import Journal
 from app.models.mixins import SoftDeleteMixin, TimestampMixin, UUIDMixin
 from app.models.packing_item import PackingItem
 from app.models.trip import Trip
+from app.models.trip_place import TripPlace
 from app.models.user import User
 from app.models.user_profile import UserProfile
 
@@ -51,4 +52,5 @@ __all__ = [
     "Journal",
     "PackingItem",
     "Itinerary",
+    "TripPlace",
 ]
