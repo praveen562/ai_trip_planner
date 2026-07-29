@@ -1,5 +1,7 @@
 from uuid import UUID
 
+from sqlalchemy.exc import IntegrityError
+
 from app.core.exceptions import (
     AuthorizationException,
     ConflictException,
@@ -87,7 +89,17 @@ class TripPlaceService:
             source=place_data.source,
         )
 
-        return await self.repository.create(place)
+        try:
+            return await self.repository.create(place)
+        except IntegrityError as exc:
+            # A concurrent request may have inserted the same place
+            # between the exists() check above and this insert. The
+            # DB-level unique constraint is the final source of truth;
+            # translate its violation into the same ConflictException
+            # a same-request duplicate would raise.
+            raise ConflictException(
+                "This place has already been saved to this trip."
+            ) from exc
 
     async def list_places(self, user_id: UUID, trip_id: UUID) -> TripPlaceListResponse:
         """

@@ -5,6 +5,7 @@ Repository for all TripPlace database operations.
 from uuid import UUID
 
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.trip_place import TripPlace
@@ -21,9 +22,19 @@ class TripPlaceRepository:
     async def create(self, place: TripPlace) -> TripPlace:
         """
         Create a new saved place.
+
+        On a unique-constraint violation (a duplicate slipping through
+        a concurrent request that passed the service-layer `exists()`
+        check before this insert), the session is rolled back and the
+        original IntegrityError is re-raised for the service layer to
+        translate into a ConflictException.
         """
         self.db.add(place)
-        await self.db.commit()
+        try:
+            await self.db.commit()
+        except IntegrityError:
+            await self.db.rollback()
+            raise
         await self.db.refresh(place)
         return place
 
