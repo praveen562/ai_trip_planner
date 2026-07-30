@@ -57,57 +57,56 @@ export const spacing = {
   // Vertical rhythm
   vertical: {
     xs: '4px',
-    4px',
-    sm: '    8px',
-    md: '    12px',
-    lg: '    16px',
-    xl: '    24px'
+    sm: '8px',
+    md: '12px',
+    lg: '16px',
+    xl: '24px'
   },
 
   // Horizontal rhythm
   horizontal: {
-    xs: '    4px',
-    sm: '    8px',
-    md: '    12px',
-    lg: '    16px',
-    xl: '    24px'
+    xs: '4px',
+    sm: '8px',
+    md: '12px',
+    lg: '16px',
+    xl: '24px'
   },
 
   // Layout spacing
   layout: {
-    narrow: '    64px',
-    normal: '    96px',
-    wide: '    128px',
-    expansive: '    160px'
+    narrow: '64px',
+    normal: '96px',
+    wide: '128px',
+    expansive: '160px'
   },
 
   // Container padding
   container: {
-    xs: '    12px',
-    sm: '    16px',
-    md: '    20px',
-    lg: '    24px',
-    xl: '    32px'
+    xs: '12px',
+    sm: '16px',
+    md: '20px',
+    lg: '24px',
+    xl: '32px'
   },
 
   // Section spacing
   section: {
-    xs: '    24px',
-    sm: '    32px',
-    md: '    40px',
-    lg: '    48px',
-    xl: '    64px'
+    xs: '24px',
+    sm: '32px',
+    md: '40px',
+    lg: '48px',
+    xl: '64px'
   },
 
   // Gap utilities
   gap: {
-    xs: '    4px',
-    sm: '    6px',
-    md: '    8px',
-    lg: '    12px',
-    xl: '    16px',
-    '2xl': '    24px',
-    '3xl': '    32px'
+    xs: '4px',
+    sm: '6px',
+    md: '8px',
+    lg: '12px',
+    xl: '16px',
+    '2xl': '24px',
+    '3xl': '32px'
   }
 };
 
