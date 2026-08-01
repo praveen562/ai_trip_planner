@@ -1,5 +1,34 @@
+/* Tailwind (utility classes used throughout components/pages) */
+@import 'tailwindcss';
+
 /* Import our custom styles */
 @import './App.css';
+
+/* Map Tailwind's generated utilities (bg-primary, text-primary, etc.)
+   to the design tokens already defined in styles/variables.css, so the
+   component classNames work without hardcoding a second color palette. */
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-dark: var(--secondary-dark);
+
+  --color-tertiary: var(--tertiary);
+  --color-tertiary-light: var(--tertiary-light);
+  --color-tertiary-dark: var(--tertiary-dark);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-info: var(--info);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+}
 
 /* Ensure body and html take full height */
 html, body, #root {
