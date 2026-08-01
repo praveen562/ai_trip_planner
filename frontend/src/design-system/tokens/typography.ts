@@ -1,14 +1,23 @@
 /**
- * Refined Typography System
- * Inspired by: Apple San Francisco, Inter, IBM Plex
+ * Naviora Typography System
+ *
+ * Display: Clash Display — a confident geometric face used with restraint,
+ *   reserved for headlines and the signature itinerary/route-code moments.
+ * Body: General Sans — designed by the same foundry to pair with Clash
+ *   Display, so headline and body always sit in the same visual family.
+ * Mono: JetBrains Mono — used specifically for route codes, timestamps,
+ *   and coordinates, echoing real boarding-pass/flight-board typography
+ *   rather than serving as a neutral "data font."
  */
 
 export const typography = {
   // Font Families
   fontFamily: {
-    sans: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    display:
+      '"Clash Display", "General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    sans: '"General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     serif: 'Georgia, "Times New Roman", Times, serif',
-    mono: '"SF Mono", "Roboto Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+    mono: '"JetBrains Mono", "SF Mono", "Roboto Mono", Menlo, Monaco, Consolas, monospace'
   },
 
   // Font Weights
@@ -66,18 +75,21 @@ export const typography = {
   styles: {
     // Display / Hero
     display1: {
+      fontFamily: 'display',
       fontSize: '9xl',
       fontWeight: 'bold',
       letterSpacing: '-0.05em',
       lineHeight: '1.1'
     },
     display2: {
+      fontFamily: 'display',
       fontSize: '8xl',
       fontWeight: 'bold',
       letterSpacing: '-0.05em',
       lineHeight: '1.1'
     },
     display3: {
+      fontFamily: 'display',
       fontSize: '7xl',
       fontWeight: 'bold',
       letterSpacing: '-0.05em',
@@ -86,24 +98,28 @@ export const typography = {
 
     // Headlines
     headline1: {
+      fontFamily: 'display',
       fontSize: '6xl',
       fontWeight: 'bold',
       letterSpacing: '-0.025em',
       lineHeight: '1.2'
     },
     headline2: {
+      fontFamily: 'display',
       fontSize: '5xl',
       fontWeight: 'bold',
       letterSpacing: '-0.025em',
       lineHeight: '1.2'
     },
     headline3: {
+      fontFamily: 'display',
       fontSize: '4xl',
       fontWeight: 'bold',
       letterSpacing: '-0.025em',
       lineHeight: '1.25'
     },
     headline4: {
+      fontFamily: 'display',
       fontSize: '3xl',
       fontWeight: 'semibold',
       letterSpacing: '-0.015em',
@@ -170,6 +186,17 @@ export const typography = {
       fontWeight: 'medium',
       letterSpacing: '0.08em',
       textTransform: 'uppercase',
+      lineHeight: '1.4'
+    },
+
+    // Route code / boarding-pass data — JetBrains Mono.
+    // For itinerary leg codes, timestamps, and coordinates
+    // (e.g. "NVR · 014   KYOTO ⇄ OSAKA   09:40").
+    routeCode: {
+      fontFamily: 'mono',
+      fontSize: 'sm',
+      fontWeight: 'medium',
+      letterSpacing: '0.05em',
       lineHeight: '1.4'
     }
   }

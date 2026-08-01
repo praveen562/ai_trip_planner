@@ -16,6 +16,11 @@
   --color-secondary-light: var(--secondary-light);
   --color-secondary-dark: var(--secondary-dark);
 
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-dark: var(--accent-dark);
+
+  /* kept for components already written against tertiary */
   --color-tertiary: var(--tertiary);
   --color-tertiary-light: var(--tertiary-light);
   --color-tertiary-dark: var(--tertiary-dark);
@@ -25,9 +30,32 @@
   --color-error: var(--error);
   --color-info: var(--info);
 
+  --color-surface: var(--surface);
+  --color-page: var(--background);
+  --color-dark: var(--dark);
+
+  --font-display: var(--font-display);
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);
+
+  /* Large, premium rounded corners — overrides Tailwind's defaults so
+     plain rounded-lg / rounded-2xl / rounded-3xl utilities pick these up. */
+  --radius-sm: var(--nv-radius-sm);
+  --radius-md: var(--nv-radius-md);
+  --radius-lg: var(--nv-radius-lg);
+  --radius-xl: var(--nv-radius-xl);
+  --radius-2xl: var(--nv-radius-2xl);
+  --radius-3xl: var(--nv-radius-3xl);
+
+  /* Soft, ink-tinted shadows — overrides Tailwind's default pure-black
+     shadow-sm / shadow-md / shadow-lg / shadow-xl utilities. */
+  --shadow-sm: var(--nv-shadow-sm);
+  --shadow-md: var(--nv-shadow-md);
+  --shadow-lg: var(--nv-shadow-lg);
+  --shadow-xl: var(--nv-shadow-xl);
+
+  --ease-premium: var(--ease-premium);
 }
 
 /* Ensure body and html take full height */
@@ -40,4 +68,29 @@ html, body, #root {
 /* Smooth scrolling for the entire page */
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-page);
+  color: var(--color-dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+}
+
+code, kbd, samp, pre {
+  font-family: var(--font-mono);
+}
+
+/* Respect reduced-motion preferences site-wide */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
