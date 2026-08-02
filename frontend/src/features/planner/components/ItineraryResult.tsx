@@ -1,0 +1,91 @@
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { CloudSun, RotateCcw, Save } from 'lucide-react';
+import { Card } from '../../../components/ui/Card';
+import { Button } from '../../../components/ui/Button';
+import { formatDateRange } from '../../../utils/date';
+import type { Itinerary } from '../../../types/itinerary';
+
+export interface ItineraryResultProps {
+  itinerary: Itinerary;
+  onRegenerate: () => void;
+}
+
+export function ItineraryResult({ itinerary, onRegenerate }: ItineraryResultProps) {
+  const navigate = useNavigate();
+
+  return (
+    <div className="mx-auto max-w-2xl">
+      {/* Header ticket, matching the Hero/AIPlannerPreview motif */}
+      <Card variant="elevated" padding="none" className="overflow-hidden">
+        <div className="flex items-center justify-between px-6 pt-6">
+          <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+            AI generated
+          </span>
+          <span className="font-mono text-xs text-gray-400">
+            {itinerary.travelers} traveler{itinerary.travelers > 1 ? 's' : ''} · {itinerary.budget}
+          </span>
+        </div>
+
+        <div className="px-6 pb-4 pt-3">
+          <h2 className="font-display text-2xl font-semibold text-dark">{itinerary.destination}</h2>
+          <p className="mt-1 font-mono text-sm text-gray-500">
+            {formatDateRange(itinerary.startDate, itinerary.endDate)} · {itinerary.totalDays} days
+          </p>
+        </div>
+
+        <div className="relative my-1 flex items-center">
+          <div className="absolute -left-2.5 size-5 rounded-full bg-page" />
+          <div className="mx-2.5 h-px w-full border-t border-dashed border-gray-200" />
+          <div className="absolute -right-2.5 size-5 rounded-full bg-page" />
+        </div>
+
+        <div className="flex gap-3 px-6 py-4">
+          <Button size="sm" variant="outline" leftIcon={<RotateCcw className="size-4" />} onClick={onRegenerate}>
+            Regenerate
+          </Button>
+          <Button size="sm" leftIcon={<Save className="size-4" />} onClick={() => navigate('/dashboard')}>
+            Save trip
+          </Button>
+        </div>
+      </Card>
+
+      {/* Day-by-day breakdown */}
+      <div className="mt-8 space-y-5">
+        {itinerary.days.map((day, i) => (
+          <motion.div
+            key={day.dayNumber}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Card padding="none" className="overflow-hidden">
+              <div className="flex items-center justify-between border-b border-gray-100 bg-page px-5 py-3">
+                <div>
+                  <p className="font-mono text-xs text-gray-400">Day {day.dayNumber}</p>
+                  <h3 className="font-display text-base font-semibold text-dark">{day.title}</h3>
+                </div>
+                <span className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <CloudSun className="size-3.5" />
+                  {day.weatherSummary}
+                </span>
+              </div>
+
+              <div className="divide-y divide-gray-50 px-5">
+                {day.activities.map((activity) => (
+                  <div key={activity.time + activity.title} className="flex gap-4 py-3">
+                    <span className="w-16 shrink-0 font-mono text-xs text-gray-400">{activity.time}</span>
+                    <div>
+                      <p className="text-sm text-dark">{activity.title}</p>
+                      {activity.note && <p className="mt-0.5 text-xs text-gray-400">{activity.note}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
