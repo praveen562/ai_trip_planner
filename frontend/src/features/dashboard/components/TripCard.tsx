@@ -26,7 +26,7 @@ export function TripCard({ trip }: { trip: Trip }) {
       interactive
       padding="none"
       className="cursor-pointer overflow-hidden"
-      onClick={() => navigate('/trips')}
+      onClick={() => navigate(`/trips/${trip.id}`)}
     >
       <div className="relative h-36 w-full">
         {trip.coverImageUrl && !imageFailed ? (

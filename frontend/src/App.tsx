@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Dashboard from './pages/Dashboard';
 import Trips from './pages/Trips';
+import TripDetail from './pages/TripDetail';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -39,6 +40,7 @@ function AppShell() {
           {/* Protected Routes (would wrap with requireAuth in real app) */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/trips" element={<Trips />} />
+          <Route path="/trips/:tripId" element={<TripDetail />} />
           <Route path="/profile" element={<Profile />} />
 
           {/* Fallback */}

@@ -50,7 +50,7 @@ export function UpcomingTripSpotlight({ trip }: UpcomingTripSpotlightProps) {
               {trip.country} · {formatDateRange(trip.startDate, trip.endDate)} · {trip.totalDays} days
             </p>
 
-            <Button size="sm" className="mt-5" rightIcon={<ArrowRight className="size-4" />} onClick={() => navigate('/trips')}>
+            <Button size="sm" className="mt-5" rightIcon={<ArrowRight className="size-4" />} onClick={() => navigate(`/trips/${trip.id}`)}>
               View itinerary
             </Button>
           </div>
