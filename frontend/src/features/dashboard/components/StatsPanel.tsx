@@ -9,7 +9,7 @@ export interface StatsPanelProps {
 const ROWS = (stats: DashboardStats) => [
   { icon: Compass, label: 'Active trips', value: stats.activeTrips },
   { icon: MapPinned, label: 'Trips planned', value: stats.totalTrips },
-  { icon: Globe2, label: 'Countries visited', value: stats.countriesVisited }
+  { icon: Globe2, label: 'Destinations', value: stats.countriesVisited }
 ];
 
 export function StatsPanel({ stats }: StatsPanelProps) {

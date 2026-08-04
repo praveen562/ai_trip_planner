@@ -1,16 +1,16 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MapPin, Users, Wand2 } from 'lucide-react';
+import { MapPin, Wand2, DollarSign, Tag } from 'lucide-react';
 import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { plannerSchema } from '../schemas';
 import type { PlannerFormValues, PlannerFormInput } from '../schemas';
 
-const BUDGET_OPTIONS: Array<{ value: PlannerFormValues['budget']; label: string }> = [
-  { value: 'budget', label: 'Budget' },
-  { value: 'mid-range', label: 'Mid-range' },
-  { value: 'luxury', label: 'Luxury' }
+const TRAVEL_STYLE_OPTIONS: Array<{ value: PlannerFormValues['travelStyle']; label: string }> = [
+  { value: 'BUDGET', label: 'Budget' },
+  { value: 'BALANCED', label: 'Balanced' },
+  { value: 'PREMIUM', label: 'Premium' }
 ];
 
 export interface PlannerFormProps {
@@ -27,10 +27,10 @@ export function PlannerForm({ onSubmit, defaultValues }: PlannerFormProps) {
     formState: { errors, isSubmitting }
   } = useForm<PlannerFormInput, unknown, PlannerFormValues>({
     resolver: zodResolver(plannerSchema),
-    defaultValues: { budget: 'mid-range', travelers: 2, ...defaultValues }
+    defaultValues: { travelStyle: 'BALANCED', ...defaultValues }
   });
 
-  const budget = watch('budget');
+  const travelStyle = watch('travelStyle');
 
   return (
     <Card variant="elevated" className="mx-auto max-w-2xl">
@@ -43,12 +43,29 @@ export function PlannerForm({ onSubmit, defaultValues }: PlannerFormProps) {
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
         <Input
-          label="Destination"
-          placeholder="Kyoto, Japan"
-          leftIcon={<MapPin className="size-4.5" />}
-          error={errors.destination?.message}
-          {...register('destination')}
+          label="Trip name"
+          placeholder="Kyoto in autumn"
+          leftIcon={<Tag className="size-4.5" />}
+          error={errors.title?.message}
+          {...register('title')}
         />
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <Input
+            label="Traveling from"
+            placeholder="New York, USA"
+            leftIcon={<MapPin className="size-4.5" />}
+            error={errors.sourceLocation?.message}
+            {...register('sourceLocation')}
+          />
+          <Input
+            label="Destination"
+            placeholder="Kyoto, Japan"
+            leftIcon={<MapPin className="size-4.5" />}
+            error={errors.destination?.message}
+            {...register('destination')}
+          />
+        </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Input label="Start date" type="date" error={errors.startDate?.message} {...register('startDate')} />
@@ -56,25 +73,26 @@ export function PlannerForm({ onSubmit, defaultValues }: PlannerFormProps) {
         </div>
 
         <Input
-          label="Travelers"
+          label="Total budget"
           type="number"
           min={1}
-          max={20}
-          leftIcon={<Users className="size-4.5" />}
-          error={errors.travelers?.message}
-          {...register('travelers')}
+          step="0.01"
+          placeholder="1500"
+          leftIcon={<DollarSign className="size-4.5" />}
+          error={errors.budget?.message}
+          {...register('budget')}
         />
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">Budget</label>
+          <label className="mb-1.5 block text-sm font-medium text-gray-700">Travel style</label>
           <div className="grid grid-cols-3 gap-2">
-            {BUDGET_OPTIONS.map((option) => (
+            {TRAVEL_STYLE_OPTIONS.map((option) => (
               <button
                 key={option.value}
                 type="button"
-                onClick={() => setValue('budget', option.value, { shouldValidate: true })}
+                onClick={() => setValue('travelStyle', option.value, { shouldValidate: true })}
                 className={`rounded-xl border px-3 py-2 text-sm font-medium transition-colors ${
-                  budget === option.value
+                  travelStyle === option.value
                     ? 'border-primary bg-primary/10 text-primary'
                     : 'border-gray-200 text-gray-500 hover:border-gray-300'
                 }`}
@@ -87,7 +105,7 @@ export function PlannerForm({ onSubmit, defaultValues }: PlannerFormProps) {
 
         <div>
           <label htmlFor="notes" className="mb-1.5 block text-sm font-medium text-gray-700">
-            Anything else? <span className="font-normal text-gray-400">(optional)</span>
+            Interests / anything else? <span className="font-normal text-gray-400">(optional)</span>
           </label>
           <textarea
             id="notes"

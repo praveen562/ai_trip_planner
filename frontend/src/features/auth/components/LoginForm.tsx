@@ -8,9 +8,11 @@ import { Button } from '../../../components/ui/Button';
 import { loginSchema } from '../schemas';
 import type { LoginFormValues } from '../schemas';
 import { login } from '../authService';
+import { useAuth } from '../AuthContext';
 
 export function LoginForm() {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
   const [serverError, setServerError] = useState<string | null>(null);
 
   const {
@@ -22,10 +24,11 @@ export function LoginForm() {
   const onSubmit = async (values: LoginFormValues) => {
     setServerError(null);
     try {
-      await login(values);
+      const user = await login(values);
+      setUser(user);
       navigate('/dashboard');
     } catch {
-      setServerError('Something went wrong signing you in. Please try again.');
+      setServerError('Could not sign you in — check your credentials, or that the server is reachable.');
     }
   };
 

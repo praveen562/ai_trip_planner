@@ -8,9 +8,11 @@ import { Button } from '../../../components/ui/Button';
 import { registerSchema } from '../schemas';
 import type { RegisterFormValues } from '../schemas';
 import { register as registerUser } from '../authService';
+import { useAuth } from '../AuthContext';
 
 export function RegisterForm() {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
   const [serverError, setServerError] = useState<string | null>(null);
 
   const {
@@ -22,10 +24,11 @@ export function RegisterForm() {
   const onSubmit = async (values: RegisterFormValues) => {
     setServerError(null);
     try {
-      await registerUser(values);
+      const user = await registerUser(values);
+      setUser(user);
       navigate('/dashboard');
     } catch {
-      setServerError('Something went wrong creating your account. Please try again.');
+      setServerError('Something went wrong creating your account. That email may already be registered.');
     }
   };
 

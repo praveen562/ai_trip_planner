@@ -4,26 +4,47 @@ import { PageLayout } from '../../components/layout/PageLayout';
 import { PlannerForm } from './components/PlannerForm';
 import { GeneratingState } from './components/GeneratingState';
 import { ItineraryResult } from './components/ItineraryResult';
-import { generateItinerary } from './plannerService';
+import { createTripAndGenerateItinerary, regenerateItinerary } from './plannerService';
 import type { PlannerFormValues } from './schemas';
-import type { Itinerary } from '../../types/itinerary';
+import type { GeneratedItinerary } from '../../types/itinerary';
 
 type PlannerStep = 'form' | 'generating' | 'result' | 'error';
 
 export function PlannerPage() {
   const [step, setStep] = useState<PlannerStep>('form');
-  const [itinerary, setItinerary] = useState<Itinerary | null>(null);
+  const [itinerary, setItinerary] = useState<GeneratedItinerary | null>(null);
   const [lastValues, setLastValues] = useState<PlannerFormValues | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isRegenerating, setIsRegenerating] = useState(false);
 
   const runGeneration = async (values: PlannerFormValues) => {
     setLastValues(values);
     setStep('generating');
     try {
-      const result = await generateItinerary(values);
+      const result = await createTripAndGenerateItinerary(values);
       setItinerary(result);
       setStep('result');
-    } catch {
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error && err.message.includes('Network')
+          ? "Couldn't reach the server. Is the backend running?"
+          : 'Something went wrong generating your itinerary.'
+      );
       setStep('error');
+    }
+  };
+
+  const handleRegenerate = async () => {
+    if (!itinerary || !lastValues) return;
+    setIsRegenerating(true);
+    try {
+      const result = await regenerateItinerary(itinerary.itineraryId, itinerary.tripId, lastValues);
+      setItinerary(result);
+    } catch {
+      setErrorMessage('Something went wrong regenerating your itinerary.');
+      setStep('error');
+    } finally {
+      setIsRegenerating(false);
     }
   };
 
@@ -49,20 +70,20 @@ export function PlannerPage() {
 
         {step === 'result' && itinerary && (
           <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <ItineraryResult itinerary={itinerary} onRegenerate={() => lastValues && runGeneration(lastValues)} />
+            <ItineraryResult itinerary={itinerary} onRegenerate={handleRegenerate} isRegenerating={isRegenerating} />
           </motion.div>
         )}
 
         {step === 'error' && (
           <motion.div key="error" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="mx-auto max-w-md rounded-2xl border border-dashed border-gray-200 px-6 py-10 text-center">
-              <p className="text-gray-500">Something went wrong generating your itinerary. Please try again.</p>
+              <p className="text-gray-500">{errorMessage ?? 'Something went wrong. Please try again.'}</p>
               <button
                 type="button"
-                onClick={() => setStep('form')}
+                onClick={() => setStep(itinerary ? 'result' : 'form')}
                 className="mt-4 text-sm font-medium text-primary hover:text-primary-dark"
               >
-                Back to the form
+                {itinerary ? 'Back to itinerary' : 'Back to the form'}
               </button>
             </div>
           </motion.div>

@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../features/auth/AuthContext';
 
 export interface MobileMenuItem {
   label: string;
@@ -18,6 +19,8 @@ export interface MobileMenuProps {
  * open/close and scroll-lock logic on top of its own responsibilities.
  */
 export function MobileMenu({ isOpen, items, onNavigate }: MobileMenuProps) {
+  const { user, logout } = useAuth();
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -41,20 +44,35 @@ export function MobileMenu({ isOpen, items, onNavigate }: MobileMenuProps) {
             ))}
 
             <div className="mt-3 flex flex-col gap-2 border-t border-gray-100 pt-3">
-              <Link
-                to="/login"
-                onClick={onNavigate}
-                className="rounded-lg px-3 py-2.5 text-center text-base font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Log in
-              </Link>
-              <Link
-                to="/register"
-                onClick={onNavigate}
-                className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary text-base font-medium text-white shadow-md transition-colors hover:bg-primary-dark"
-              >
-                Get Started
-              </Link>
+              {user ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    onNavigate();
+                  }}
+                  className="rounded-lg px-3 py-2.5 text-center text-base font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  Log out ({user.name.split(' ')[0]})
+                </button>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={onNavigate}
+                    className="rounded-lg px-3 py-2.5 text-center text-base font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={onNavigate}
+                    className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary text-base font-medium text-white shadow-md transition-colors hover:bg-primary-dark"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </motion.div>

@@ -6,10 +6,8 @@ import { UpcomingTripSpotlight } from './components/UpcomingTripSpotlight';
 import { StatsPanel } from './components/StatsPanel';
 import { TripsGrid } from './components/TripsGrid';
 import { useDashboardData } from './useDashboardData';
+import { useAuth } from '../auth/AuthContext';
 import type { Trip } from '../../types/trip';
-
-// Placeholder until Step 10 wires up real auth/session state.
-const CURRENT_USER_NAME = 'Jordan Rivera';
 
 function nextUpcomingTrip(trips: Trip[] | undefined): Trip | undefined {
   if (!trips) return undefined;
@@ -43,6 +41,7 @@ function DashboardSkeleton() {
 
 export function DashboardPage() {
   const { data, isLoading, isError } = useDashboardData();
+  const { user } = useAuth();
 
   return (
     <PageLayout>
@@ -59,7 +58,7 @@ export function DashboardPage() {
 
       {data && (
         <div className="space-y-8">
-          <WelcomeHeader name={CURRENT_USER_NAME} />
+          <WelcomeHeader name={user?.name ?? 'there'} />
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2">

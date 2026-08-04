@@ -1,12 +1,16 @@
 import { z } from 'zod';
 
+export const TRAVEL_STYLES = ['BUDGET', 'BALANCED', 'PREMIUM'] as const;
+
 export const plannerSchema = z
   .object({
+    title: z.string().min(1, 'Give your trip a name').max(150),
+    sourceLocation: z.string().min(1, 'Where are you traveling from?'),
     destination: z.string().min(2, 'Where are you headed?'),
     startDate: z.string().min(1, 'Pick a start date'),
     endDate: z.string().min(1, 'Pick an end date'),
-    travelers: z.coerce.number().int().min(1, 'At least 1 traveler').max(20, 'Max 20 travelers'),
-    budget: z.enum(['budget', 'mid-range', 'luxury']),
+    budget: z.coerce.number().positive('Enter your total trip budget'),
+    travelStyle: z.enum(TRAVEL_STYLES),
     notes: z.string().max(500, 'Keep it under 500 characters').optional()
   })
   .refine((data) => new Date(data.endDate) > new Date(data.startDate), {

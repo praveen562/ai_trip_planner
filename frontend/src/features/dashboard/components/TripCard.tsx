@@ -6,15 +6,19 @@ import type { Trip } from '../../../types/trip';
 import { cn } from '../../../utils/cn';
 
 const STATUS_STYLES: Record<Trip['status'], string> = {
+  planning: 'bg-gray-100 text-gray-500',
   upcoming: 'bg-primary/10 text-primary',
   active: 'bg-success/10 text-success',
-  completed: 'bg-gray-100 text-gray-500'
+  completed: 'bg-gray-100 text-gray-500',
+  cancelled: 'bg-error/10 text-error'
 };
 
 const STATUS_LABELS: Record<Trip['status'], string> = {
+  planning: 'Planning',
   upcoming: 'Upcoming',
   active: 'In progress',
-  completed: 'Completed'
+  completed: 'Completed',
+  cancelled: 'Cancelled'
 };
 
 export function TripCard({ trip }: { trip: Trip }) {
