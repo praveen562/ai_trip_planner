@@ -51,6 +51,42 @@ export interface ItineraryResponseDto {
   updated_at: string;
 }
 
+export type Gender = 'MALE' | 'FEMALE' | 'OTHER';
+
+export interface UserProfileResponseDto {
+  id: string;
+  user_id: string;
+  full_name: string;
+  phone_number: string | null;
+  date_of_birth: string | null;
+  gender: Gender | null;
+  nationality: string | null;
+  preferred_language: string | null;
+  preferred_currency: string | null;
+  emergency_contact_name: string | null;
+  emergency_contact_phone: string | null;
+  dietary_preferences: string | null;
+  accessibility_requirements: string | null;
+  bio: string | null;
+  profile_image_url: string | null;
+}
+
+export interface UserProfileWriteDto {
+  full_name?: string;
+  phone_number?: string;
+  date_of_birth?: string;
+  gender?: Gender;
+  nationality?: string;
+  preferred_language?: string;
+  preferred_currency?: string;
+  emergency_contact_name?: string;
+  emergency_contact_phone?: string;
+  dietary_preferences?: string;
+  accessibility_requirements?: string;
+  bio?: string;
+  profile_image_url?: string;
+}
+
 export interface UserResponseDto {
   id: string;
   full_name: string;
