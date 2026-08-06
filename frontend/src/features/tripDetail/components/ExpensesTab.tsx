@@ -1,20 +1,54 @@
-import { Home, UtensilsCrossed, Car, Ticket, MoreHorizontal } from 'lucide-react';
+import { Home, UtensilsCrossed, Car, ShoppingBag, Clapperboard, Ticket, HeartPulse, MoreHorizontal, AlertTriangle } from 'lucide-react';
 import { Card } from '../../../components/ui/Card';
-import type { Expense, ExpenseCategory } from '../../../types/tripDetail';
+import { SkeletonText } from '../../../components/ui/Loading';
+import { useExpenses } from '../useTripDetail';
+import type { ExpenseCategory } from '../../../types/tripDetail';
 
 const CATEGORY_META: Record<ExpenseCategory, { label: string; icon: typeof Home }> = {
-  lodging: { label: 'Lodging', icon: Home },
   food: { label: 'Food', icon: UtensilsCrossed },
+  hotel: { label: 'Lodging', icon: Home },
   transport: { label: 'Transport', icon: Car },
+  shopping: { label: 'Shopping', icon: ShoppingBag },
+  entertainment: { label: 'Entertainment', icon: Clapperboard },
   activities: { label: 'Activities', icon: Ticket },
-  other: { label: 'Other', icon: MoreHorizontal }
+  medical: { label: 'Medical', icon: HeartPulse },
+  miscellaneous: { label: 'Other', icon: MoreHorizontal }
 };
 
 function formatCurrency(amount: number, currency: string) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
 }
 
-export function ExpensesTab({ expenses }: { expenses: Expense[] }) {
+export function ExpensesTab({ tripId }: { tripId: string }) {
+  const { data: expenses, isLoading, isError } = useExpenses(tripId);
+
+  if (isLoading) {
+    return (
+      <Card className="space-y-3">
+        <SkeletonText lines={4} />
+      </Card>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-gray-200 py-16 text-center">
+        <span className="flex size-12 items-center justify-center rounded-full bg-error/10 text-error">
+          <AlertTriangle className="size-5" />
+        </span>
+        <p className="text-gray-500">Couldn't load expenses for this trip.</p>
+      </div>
+    );
+  }
+
+  if (!expenses || expenses.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-gray-200 py-16 text-center">
+        <p className="text-sm text-gray-400">No expenses logged yet.</p>
+      </div>
+    );
+  }
+
   const currency = expenses[0]?.currency ?? 'USD';
   const total = expenses.reduce((sum, e) => sum + e.amount, 0);
 

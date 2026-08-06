@@ -1,15 +1,40 @@
-import { useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, AlertTriangle } from 'lucide-react';
 import { Card } from '../../../components/ui/Card';
+import { SkeletonText } from '../../../components/ui/Loading';
 import { cn } from '../../../utils/cn';
+import { usePackingItems, useTogglePackingItem } from '../useTripDetail';
 import type { PackingItem } from '../../../types/tripDetail';
 
-export function PackingTab({ items: initialItems }: { items: PackingItem[] }) {
-  const [items, setItems] = useState(initialItems);
+export function PackingTab({ tripId }: { tripId: string }) {
+  const { data: items, isLoading, isError } = usePackingItems(tripId);
+  const toggleItem = useTogglePackingItem(tripId);
 
-  const togglePacked = (id: string) => {
-    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, packed: !item.packed } : item)));
-  };
+  if (isLoading) {
+    return (
+      <Card className="space-y-3">
+        <SkeletonText lines={4} />
+      </Card>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-gray-200 py-16 text-center">
+        <span className="flex size-12 items-center justify-center rounded-full bg-error/10 text-error">
+          <AlertTriangle className="size-5" />
+        </span>
+        <p className="text-gray-500">Couldn't load the packing checklist for this trip.</p>
+      </div>
+    );
+  }
+
+  if (!items || items.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-gray-200 py-16 text-center">
+        <p className="text-sm text-gray-400">Nothing on the packing list yet.</p>
+      </div>
+    );
+  }
 
   const packedCount = items.filter((i) => i.packed).length;
   const progress = items.length ? Math.round((packedCount / items.length) * 100) : 0;
@@ -44,7 +69,7 @@ export function PackingTab({ items: initialItems }: { items: PackingItem[] }) {
               <button
                 key={item.id}
                 type="button"
-                onClick={() => togglePacked(item.id)}
+                onClick={() => toggleItem.mutate({ id: item.id, packed: !item.packed })}
                 className="flex w-full items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-gray-50"
               >
                 <span

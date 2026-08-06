@@ -44,17 +44,17 @@ export function TripDetailPage() {
         </div>
       )}
 
-      {trip && (
+      {trip && tripId && (
         <div className="space-y-6">
           <TripHeader trip={trip} />
           <TabNav active={activeTab} onChange={setActiveTab} />
 
           <div>
-            {activeTab === 'itinerary' && <ItineraryTab days={trip.days} />}
-            {activeTab === 'journal' && <JournalTab entries={trip.journal} />}
-            {activeTab === 'expenses' && <ExpensesTab expenses={trip.expenses} />}
-            {activeTab === 'packing' && <PackingTab items={trip.packing} />}
-            {activeTab === 'places' && <PlacesTab places={trip.places} />}
+            {activeTab === 'itinerary' && <ItineraryTab tripId={tripId} />}
+            {activeTab === 'journal' && <JournalTab tripId={tripId} />}
+            {activeTab === 'expenses' && <ExpensesTab tripId={tripId} />}
+            {activeTab === 'packing' && <PackingTab tripId={tripId} />}
+            {activeTab === 'places' && <PlacesTab tripId={tripId} />}
           </div>
         </div>
       )}

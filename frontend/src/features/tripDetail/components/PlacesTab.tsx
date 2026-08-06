@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { MapPin } from 'lucide-react';
+import { MapPin, AlertTriangle } from 'lucide-react';
 import { Card } from '../../../components/ui/Card';
+import { SkeletonCard } from '../../../components/ui/Loading';
+import { useSavedPlaces } from '../useTripDetail';
 import type { SavedPlace } from '../../../types/tripDetail';
 
 function PlaceTile({ place }: { place: SavedPlace }) {
@@ -32,8 +34,31 @@ function PlaceTile({ place }: { place: SavedPlace }) {
   );
 }
 
-export function PlacesTab({ places }: { places: SavedPlace[] }) {
-  if (places.length === 0) {
+export function PlacesTab({ tripId }: { tripId: string }) {
+  const { data: places, isLoading, isError } = useSavedPlaces(tripId);
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-gray-200 py-16 text-center">
+        <span className="flex size-12 items-center justify-center rounded-full bg-error/10 text-error">
+          <AlertTriangle className="size-5" />
+        </span>
+        <p className="text-gray-500">Couldn't load saved places for this trip.</p>
+      </div>
+    );
+  }
+
+  if (!places || places.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-gray-200 py-16 text-center">
         <MapPin className="size-6 text-gray-300" />

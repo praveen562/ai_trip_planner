@@ -50,6 +50,23 @@ async def regenerate_itinerary(
 
 
 @router.get(
+    "/trips/{trip_id}/itinerary",
+    response_model=ItineraryResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_trip_itinerary(
+    trip_id: UUID,
+    current_user: User = Depends(get_current_user),
+    service: ItineraryService = Depends(get_itinerary_service),
+):
+    """
+    Get the active itinerary for a trip owned by the currently
+    logged-in user. 404s if the trip has no itinerary yet.
+    """
+    return await service.get_itinerary_for_trip(current_user.id, trip_id)
+
+
+@router.get(
     "/itinerary/{itinerary_id}",
     response_model=ItineraryResponse,
     status_code=status.HTTP_200_OK,

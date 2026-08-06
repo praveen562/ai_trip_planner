@@ -1,14 +1,26 @@
-import type { ItineraryDay } from './itinerary';
-import type { Trip } from './trip';
-
 export interface JournalEntry {
   id: string;
   date: string; // ISO date
   title: string;
   note: string;
+  location?: string;
 }
 
-export type ExpenseCategory = 'lodging' | 'food' | 'transport' | 'activities' | 'other';
+/**
+ * Mirrors the backend's ExpenseCategory enum (app/models/enums.py),
+ * lowercased to match this codebase's domain-type convention (see
+ * TripStatus). "lodging" is kept as an alias label for the backend's
+ * HOTEL for friendlier display copy.
+ */
+export type ExpenseCategory =
+  | 'food'
+  | 'hotel'
+  | 'transport'
+  | 'shopping'
+  | 'entertainment'
+  | 'activities'
+  | 'medical'
+  | 'miscellaneous';
 
 export interface Expense {
   id: string;
@@ -31,12 +43,4 @@ export interface SavedPlace {
   name: string;
   category: string;
   imageUrl?: string;
-}
-
-export interface TripDetail extends Trip {
-  days: ItineraryDay[];
-  journal: JournalEntry[];
-  expenses: Expense[];
-  packing: PackingItem[];
-  places: SavedPlace[];
 }

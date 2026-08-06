@@ -221,6 +221,20 @@ class ItineraryService:
         itinerary, _ = await self._get_owned_itinerary(user_id, itinerary_id)
         return itinerary
 
+    async def get_itinerary_for_trip(self, user_id: UUID, trip_id: UUID) -> Itinerary:
+        """
+        Retrieve the active itinerary for a trip owned by the given
+        user. Raises NotFoundException if the trip has no itinerary
+        yet (e.g. it hasn't been generated).
+        """
+        await self._get_owned_trip(user_id, trip_id)
+
+        itinerary = await self.repository.get_trip_itinerary(trip_id)
+        if itinerary is None:
+            raise NotFoundException("This trip does not have an itinerary yet.")
+
+        return itinerary
+
     async def delete_itinerary(self, user_id: UUID, itinerary_id: UUID) -> None:
         """
         Soft-delete an itinerary, enforcing ownership via its trip.

@@ -101,3 +101,111 @@ export interface TokenResponseDto {
   refresh_token: string;
   token_type: string;
 }
+
+/* ---------------------------- Trip detail sub-resources ---------------------------- */
+
+export type BackendMood =
+  | 'EXCITED'
+  | 'HAPPY'
+  | 'PEACEFUL'
+  | 'TIRED'
+  | 'ADVENTUROUS'
+  | 'STRESSED'
+  | 'ROMANTIC'
+  | 'GRATEFUL'
+  | 'OTHER';
+
+export type BackendWeather = 'SUNNY' | 'CLOUDY' | 'RAINY' | 'SNOWY' | 'WINDY' | 'STORMY' | 'FOGGY' | 'OTHER';
+
+export interface JournalResponseDto {
+  id: string;
+  trip_id: string;
+  title: string;
+  description: string;
+  location: string | null;
+  mood: BackendMood | null;
+  weather: BackendWeather | null;
+  journal_date: string;
+}
+
+export interface JournalCreateDto {
+  title: string;
+  description: string;
+  location?: string;
+  mood?: BackendMood;
+  weather?: BackendWeather;
+  journal_date: string;
+}
+
+export type BackendExpenseCategory =
+  | 'FOOD'
+  | 'HOTEL'
+  | 'TRANSPORT'
+  | 'SHOPPING'
+  | 'ENTERTAINMENT'
+  | 'ACTIVITIES'
+  | 'MEDICAL'
+  | 'MISCELLANEOUS';
+
+export type BackendPaymentMethod = 'CASH' | 'CARD' | 'UPI' | 'BANK_TRANSFER' | 'OTHER';
+
+export interface ExpenseResponseDto {
+  id: string;
+  trip_id: string;
+  title: string;
+  category: BackendExpenseCategory;
+  amount: string; // Decimal, serialized as a string
+  currency: string;
+  expense_date: string;
+  payment_method: BackendPaymentMethod | null;
+  notes: string | null;
+}
+
+export interface ExpenseSummaryResponseDto {
+  total_expenses: string;
+  expense_count: number;
+  category_breakdown: Record<string, string>;
+}
+
+export type BackendPackingCategory =
+  | 'CLOTHING'
+  | 'FOOTWEAR'
+  | 'ELECTRONICS'
+  | 'DOCUMENTS'
+  | 'MEDICINE'
+  | 'TOILETRIES'
+  | 'ACCESSORIES'
+  | 'FOOD'
+  | 'OTHER';
+
+export type BackendPackingPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'ESSENTIAL';
+
+export interface PackingItemResponseDto {
+  id: string;
+  trip_id: string;
+  item_name: string;
+  category: BackendPackingCategory;
+  quantity: number;
+  is_packed: boolean;
+  priority: BackendPackingPriority;
+  notes: string | null;
+}
+
+export interface TripPlaceResponseDto {
+  id: string;
+  trip_id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  kind: string | null;
+  image_url: string | null;
+  address: string | null;
+  description: string | null;
+  source: string;
+}
+
+export interface TripPlaceListResponseDto {
+  trip_id: string;
+  count: number;
+  places: TripPlaceResponseDto[];
+}

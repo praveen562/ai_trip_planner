@@ -1,29 +1,53 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus } from 'lucide-react';
+import { Plus, AlertTriangle } from 'lucide-react';
 import { Card } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
-import type { JournalEntry } from '../../../types/tripDetail';
+import { SkeletonText } from '../../../components/ui/Loading';
+import { useJournalEntries, useAddJournalEntry } from '../useTripDetail';
 
 const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
-export function JournalTab({ entries: initialEntries }: { entries: JournalEntry[] }) {
-  const [entries, setEntries] = useState(initialEntries);
+export function JournalTab({ tripId }: { tripId: string }) {
+  const { data: entries, isLoading, isError } = useJournalEntries(tripId);
+  const addEntry = useAddJournalEntry(tripId);
   const [isAdding, setIsAdding] = useState(false);
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
 
   const handleAdd = () => {
     if (!title.trim()) return;
-    setEntries((prev) => [
-      { id: `local-${Date.now()}`, date: new Date().toISOString().slice(0, 10), title, note },
-      ...prev
-    ]);
-    setTitle('');
-    setNote('');
-    setIsAdding(false);
+    addEntry.mutate(
+      { title, note },
+      {
+        onSuccess: () => {
+          setTitle('');
+          setNote('');
+          setIsAdding(false);
+        }
+      }
+    );
   };
+
+  if (isLoading) {
+    return (
+      <Card className="space-y-3">
+        <SkeletonText lines={4} />
+      </Card>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-gray-200 py-16 text-center">
+        <span className="flex size-12 items-center justify-center rounded-full bg-error/10 text-error">
+          <AlertTriangle className="size-5" />
+        </span>
+        <p className="text-gray-500">Couldn't load the journal for this trip.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-5">
@@ -38,7 +62,7 @@ export function JournalTab({ entries: initialEntries }: { entries: JournalEntry[
             className="w-full rounded-xl border border-gray-200 bg-surface px-4 py-3 text-sm text-dark placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
           <div className="flex gap-2">
-            <Button size="sm" onClick={handleAdd}>
+            <Button size="sm" onClick={handleAdd} isLoading={addEntry.isPending}>
               Save entry
             </Button>
             <Button size="sm" variant="ghost" onClick={() => setIsAdding(false)}>
@@ -57,11 +81,11 @@ export function JournalTab({ entries: initialEntries }: { entries: JournalEntry[
         </button>
       )}
 
-      {entries.length === 0 && !isAdding ? (
+      {entries && entries.length === 0 && !isAdding ? (
         <p className="py-10 text-center text-sm text-gray-400">No entries yet — this is where the trip's story lives.</p>
       ) : (
         <div className="space-y-4">
-          {entries.map((entry, i) => (
+          {entries?.map((entry, i) => (
             <motion.div
               key={entry.id}
               initial={{ opacity: 0, y: 8 }}

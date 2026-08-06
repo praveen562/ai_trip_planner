@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { formatDateRange } from '../../../utils/date';
-import type { TripDetail } from '../../../types/tripDetail';
+import type { Trip } from '../../../types/trip';
 
-export function TripHeader({ trip }: { trip: TripDetail }) {
+export function TripHeader({ trip }: { trip: Trip }) {
   const [imageFailed, setImageFailed] = useState(false);
 
   return (
