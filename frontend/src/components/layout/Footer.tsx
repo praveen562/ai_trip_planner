@@ -1,26 +1,49 @@
 import { Link } from 'react-router-dom';
 import { Compass } from 'lucide-react';
 
-const FOOTER_COLUMNS = [
+interface FooterLink {
+  label: string;
+  /** Omitted when no real page/anchor exists yet — renders as plain text instead of a dead "#" link. */
+  href?: string;
+}
+
+const FOOTER_COLUMNS: { heading: string; links: FooterLink[] }[] = [
   {
     heading: 'Product',
-    links: ['Features', 'Pricing', 'AI Planner', 'Destinations']
+    links: [
+      { label: 'Features', href: '/#features' },
+      { label: 'Pricing', href: '/#pricing' },
+      { label: 'AI Planner', href: '/trips' },
+      { label: 'Destinations', href: '/#destinations' }
+    ]
   },
   {
     heading: 'Company',
-    links: ['About Us', 'Careers', 'Press', 'Contact']
+    links: [
+      { label: 'About Us', href: '/about' },
+      // No Careers/Press/Contact pages exist yet — left as plain text
+      // rather than wired to a page that doesn't exist.
+      { label: 'Careers' },
+      { label: 'Press' },
+      { label: 'Contact' }
+    ]
   },
   {
     heading: 'Legal',
-    links: ['Privacy Policy', 'Terms of Service', 'Cookie Policy']
+    links: [
+      // No legal pages exist yet either — same reasoning as above.
+      { label: 'Privacy Policy' },
+      { label: 'Terms of Service' },
+      { label: 'Cookie Policy' }
+    ]
   }
 ];
 
 /**
- * Global footer. Content/columns get filled in with real destinations
- * as the corresponding pages/anchors are built (Step 4 onward) — this
- * pass is the branding + visual refresh so it matches the rest of the
- * chrome (Navbar, tokens) already updated.
+ * Global footer. Product links point at real landing-page anchors or
+ * routes. Company/Legal links without a real destination yet (Careers,
+ * Press, Contact, Privacy, Terms, Cookies) render as plain text rather
+ * than dead "#" links — inventing those pages is out of scope for now.
  */
 export function Footer() {
   return (
@@ -46,10 +69,22 @@ export function Footer() {
               <h4 className="mb-4 text-sm font-semibold text-white">{col.heading}</h4>
               <ul className="space-y-2.5">
                 {col.links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="text-sm text-gray-400 transition-colors hover:text-white">
-                      {link}
-                    </a>
+                  <li key={link.label}>
+                    {link.href ? (
+                      link.href.startsWith('/#') ? (
+                        <a href={link.href} className="text-sm text-gray-400 transition-colors hover:text-white">
+                          {link.label}
+                        </a>
+                      ) : (
+                        <Link to={link.href} className="text-sm text-gray-400 transition-colors hover:text-white">
+                          {link.label}
+                        </Link>
+                      )
+                    ) : (
+                      <span className="text-sm text-gray-600" title="Coming soon">
+                        {link.label}
+                      </span>
+                    )}
                   </li>
                 ))}
               </ul>

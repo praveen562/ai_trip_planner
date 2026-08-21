@@ -7,13 +7,17 @@ import { Button } from '../ui/Button';
 import { cn } from '../../utils/cn';
 import { useAuth } from '../../features/auth/AuthContext';
 
-const NAV_ITEMS = [
-  { label: 'Home', href: '/' },
+const MARKETING_NAV_ITEMS = [
+  { label: 'Features', href: '/#features' },
+  { label: 'Destinations', href: '/#destinations' },
+  { label: 'Pricing', href: '/#pricing' },
+  { label: 'FAQ', href: '/#faq' }
+];
+
+const APP_NAV_ITEMS = [
   { label: 'Trips', href: '/trips' },
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Profile', href: '/profile' }
-  // Marketing anchors (Features/Destinations/Pricing/FAQ) join this list
-  // once the real landing sections exist — see Step 4.
 ];
 
 /**
@@ -32,6 +36,7 @@ export function Navbar() {
 
   const isHome = pathname === '/';
   const isTransparent = isHome && !isScrolled;
+  const navItems = user ? APP_NAV_ITEMS : MARKETING_NAV_ITEMS;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 16);
@@ -63,7 +68,7 @@ export function Navbar() {
         </Link>
 
         <div className="hidden md:flex md:items-center md:gap-7">
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <NavLink key={item.href} to={item.href}>
               {item.label}
             </NavLink>
@@ -109,7 +114,7 @@ export function Navbar() {
         </button>
       </nav>
 
-      <MobileMenu isOpen={isMobileOpen} items={NAV_ITEMS} onNavigate={() => setIsMobileOpen(false)} />
+      <MobileMenu isOpen={isMobileOpen} items={navItems} onNavigate={() => setIsMobileOpen(false)} />
     </header>
   );
 }

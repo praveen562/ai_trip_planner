@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
@@ -10,8 +10,13 @@ import type { LoginFormValues } from '../schemas';
 import { login } from '../authService';
 import { useAuth } from '../AuthContext';
 
+interface LocationState {
+  from?: { pathname: string };
+}
+
 export function LoginForm() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { setUser } = useAuth();
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -26,7 +31,8 @@ export function LoginForm() {
     try {
       const user = await login(values);
       setUser(user);
-      navigate('/dashboard');
+      const from = (location.state as LocationState | null)?.from?.pathname ?? '/dashboard';
+      navigate(from, { replace: true });
     } catch {
       setServerError('Could not sign you in — check your credentials, or that the server is reachable.');
     }
@@ -61,9 +67,9 @@ export function LoginForm() {
       />
 
       <div className="flex justify-end">
-        <a href="#" className="text-sm font-medium text-primary hover:text-primary-dark">
+        <Link to="/forgot-password" className="text-sm font-medium text-primary hover:text-primary-dark">
           Forgot password?
-        </a>
+        </Link>
       </div>
 
       <Button type="submit" fullWidth isLoading={isSubmitting} rightIcon={<ArrowRight className="size-4.5" />}>

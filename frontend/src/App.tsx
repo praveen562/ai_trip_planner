@@ -14,12 +14,15 @@ import TripDetail from './pages/TripDetail';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
 import NotFound from './pages/NotFound';
+import { ProtectedRoute } from './app/router/ProtectedRoute';
+import { ScrollToHash } from './app/router/ScrollToHash';
 
 // Auth pages own their full-height layout and skip the marketing
 // footer, matching the focused, minimal-chrome pattern most premium
 // products use for sign-in/sign-up (Stripe, Linear, etc.).
-const AUTH_ROUTES = ['/login', '/register'];
+const AUTH_ROUTES = ['/login', '/register', '/forgot-password'];
 
 function AppShell() {
   const { pathname } = useLocation();
@@ -36,12 +39,41 @@ function AppShell() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          {/* Protected Routes (would wrap with requireAuth in real app) */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/trips" element={<Trips />} />
-          <Route path="/trips/:tripId" element={<TripDetail />} />
-          <Route path="/profile" element={<Profile />} />
+          {/* Protected Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/trips"
+            element={
+              <ProtectedRoute>
+                <Trips />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/trips/:tripId"
+            element={
+              <ProtectedRoute>
+                <TripDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Fallback */}
           <Route path="*" element={<NotFound />} />
@@ -56,6 +88,7 @@ function AppShell() {
 function App() {
   return (
     <Router>
+      <ScrollToHash />
       <AppShell />
     </Router>
   );
