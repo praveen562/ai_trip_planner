@@ -14,7 +14,7 @@ function AddTripTile() {
   return (
     <button
       type="button"
-      onClick={() => navigate('/trips')}
+      onClick={() => navigate('/trips/new')}
       className="flex min-h-[220px] flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-200 text-gray-400 transition-colors hover:border-primary hover:text-primary"
     >
       <Plus className="size-6" />
@@ -34,7 +34,7 @@ function EmptyTrips() {
       <p className="mt-1.5 max-w-sm text-sm text-gray-500">
         Describe your next trip in a sentence and Naviora will draft a full itinerary for you.
       </p>
-      <Button className="mt-5" onClick={() => navigate('/trips')}>
+      <Button className="mt-5" onClick={() => navigate('/trips/new')}>
         Plan your first trip
       </Button>
     </div>

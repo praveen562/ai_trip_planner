@@ -21,7 +21,7 @@ export function UpcomingTripSpotlight({ trip }: UpcomingTripSpotlightProps) {
         </span>
         <h3 className="font-display text-lg font-semibold text-dark">No upcoming trips yet</h3>
         <p className="text-sm text-gray-500">Describe a trip in a sentence and Naviora will draft the plan.</p>
-        <Button size="sm" onClick={() => navigate('/trips')}>
+        <Button size="sm" onClick={() => navigate('/trips/new')}>
           Plan a trip
         </Button>
       </Card>

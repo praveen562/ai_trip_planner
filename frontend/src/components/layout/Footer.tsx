@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Compass } from 'lucide-react';
+import { Plane } from 'lucide-react';
 
 interface FooterLink {
   label: string;
@@ -13,7 +13,7 @@ const FOOTER_COLUMNS: { heading: string; links: FooterLink[] }[] = [
     links: [
       { label: 'Features', href: '/#features' },
       { label: 'Pricing', href: '/#pricing' },
-      { label: 'AI Planner', href: '/trips' },
+      { label: 'AI Planner', href: '/trips/new' },
       { label: 'Destinations', href: '/#destinations' }
     ]
   },
@@ -52,8 +52,8 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-2">
-              <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-white">
-                <Compass className="size-4.5" />
+              <span className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500 to-blue-700 text-white">
+                <Plane className="size-4.5" />
               </span>
               <span className="font-display text-lg font-semibold tracking-tight text-white">
                 Naviora

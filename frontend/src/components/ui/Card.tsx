@@ -16,7 +16,7 @@ export interface CardProps
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  default: 'bg-surface border border-gray-100 shadow-sm',
+  default: 'bg-surface border border-gray-200 shadow-sm',
   elevated: 'bg-surface shadow-lg',
   outline: 'bg-transparent border border-gray-200',
   // Use sparingly — glassmorphism only where it earns its place

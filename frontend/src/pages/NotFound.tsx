@@ -1,20 +1,23 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
+import { Compass } from 'lucide-react';
+import { PageLayout } from '../components/layout/PageLayout';
+import { Button } from '../components/ui/Button';
 
-const NotFound: React.FC = () => {
+export default function NotFound() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12">
-      <div className="text-center">
-        <h1 className="text-6xl font-bold text-gray-300 mb-4">404</h1>
-        <h2 className="text-3xl font-bold text-gray-900 mb-6">Page Not Found</h2>
-        <p className="text-lg text-gray-600 mb-8">
-          Oops! The page you're looking for doesn't exist.
+    <PageLayout>
+      <div className="mx-auto flex max-w-md flex-col items-center py-16 text-center">
+        <span className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <Compass className="size-6" />
+        </span>
+        <h1 className="mt-6 text-3xl font-semibold text-dark">Page not found</h1>
+        <p className="mt-2 text-gray-500">
+          The page you're looking for doesn't exist, or may have moved.
         </p>
-        <a href="/" className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors">
-          Return to Home
-        </a>
+        <Link to="/" className="mt-6">
+          <Button>Back to home</Button>
+        </Link>
       </div>
-    </div>
+    </PageLayout>
   );
-};
-
-export default NotFound;
+}

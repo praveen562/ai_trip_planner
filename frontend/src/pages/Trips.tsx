@@ -1,5 +1,5 @@
-import { PlannerPage } from '../features/planner/PlannerPage';
+import { TripsPage } from '../features/trips/TripsPage';
 
 export default function Trips() {
-  return <PlannerPage />;
+  return <TripsPage />;
 }

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Compass, Menu, X, LogOut } from 'lucide-react';
+import { Plane, Menu, X, LogOut } from 'lucide-react';
 import { NavLink } from './NavLink';
 import { MobileMenu } from './MobileMenu';
 import { Button } from '../ui/Button';
-import { cn } from '../../utils/cn';
 import { useAuth } from '../../features/auth/AuthContext';
 
 const MARKETING_NAV_ITEMS = [
@@ -21,29 +20,18 @@ const APP_NAV_ITEMS = [
 ];
 
 /**
- * Global navbar. Transparent and borderless at the top of the homepage
- * — matching the light hero background rather than assuming a dark one
- * — and becomes a solid, blurred bar with a shadow once the page is
- * scrolled, or on any route other than "/". Text stays dark throughout
- * so it never depends on what's rendered behind it.
+ * Global navbar — a persistent glass-blur bar (matching the original
+ * Naviora dashboard's header) with the gradient plane mark, product
+ * name, and nav links that switch between marketing and in-app sets
+ * depending on auth state.
  */
 export function Navbar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  const isHome = pathname === '/';
-  const isTransparent = isHome && !isScrolled;
   const navItems = user ? APP_NAV_ITEMS : MARKETING_NAV_ITEMS;
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 16);
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Close the mobile menu on route change.
   useEffect(() => {
@@ -51,20 +39,16 @@ export function Navbar() {
   }, [pathname]);
 
   return (
-    <header
-      className={cn(
-        'sticky top-0 z-[var(--z-index-fixed)] transition-[background-color,box-shadow,border-color] duration-300',
-        isTransparent
-          ? 'border-b border-transparent bg-transparent'
-          : 'border-b border-gray-100 bg-surface/80 shadow-sm backdrop-blur-xl'
-      )}
-    >
-      <nav className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-white">
-            <Compass className="size-4.5" />
+    <header className="sticky top-0 z-[var(--z-index-fixed)] border-b border-white/20 bg-white/70 backdrop-blur-xl">
+      <nav className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link to="/" className="flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-blue-700 text-white shadow-lg">
+            <Plane size={22} />
           </span>
-          <span className="font-display text-lg font-semibold tracking-tight text-dark">Naviora</span>
+          <span>
+            <span className="block text-xl font-extrabold tracking-tight text-dark">Naviora</span>
+            <span className="-mt-1 block text-xs text-slate-500">AI Travel Planner</span>
+          </span>
         </Link>
 
         <div className="hidden md:flex md:items-center md:gap-7">

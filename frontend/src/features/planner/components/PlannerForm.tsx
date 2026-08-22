@@ -91,7 +91,7 @@ export function PlannerForm({ onSubmit, defaultValues }: PlannerFormProps) {
                 key={option.value}
                 type="button"
                 onClick={() => setValue('travelStyle', option.value, { shouldValidate: true })}
-                className={`rounded-xl border px-3 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-2xl border px-3 py-2 text-sm font-medium transition-colors ${
                   travelStyle === option.value
                     ? 'border-primary bg-primary/10 text-primary'
                     : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -111,7 +111,7 @@ export function PlannerForm({ onSubmit, defaultValues }: PlannerFormProps) {
             id="notes"
             rows={3}
             placeholder="Slow pace, love street food, traveling with a toddler..."
-            className="w-full rounded-xl border border-gray-200 bg-surface px-4 py-3 text-base text-dark placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full rounded-2xl border border-gray-200 bg-white/90 px-4 py-3 text-base text-dark shadow-sm placeholder:text-gray-400 transition-all duration-300 hover:border-blue-300 focus:border-primary focus:outline-none focus:ring-4 focus:ring-blue-100"
             {...register('notes')}
           />
           {errors.notes && <p className="mt-1.5 text-sm text-error">{errors.notes.message}</p>}

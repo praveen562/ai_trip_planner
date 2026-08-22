@@ -42,10 +42,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             aria-invalid={Boolean(error)}
             aria-describedby={describedBy}
             className={cn(
-              'h-11 w-full rounded-xl border bg-surface px-4 text-base text-dark placeholder:text-gray-400',
-              'transition-colors transition-shadow duration-200',
-              'focus:outline-none focus:ring-2 focus:ring-primary/30',
-              error ? 'border-error focus:border-error' : 'border-gray-200 focus:border-primary',
+              'h-12 w-full rounded-2xl border bg-white/90 px-4 text-base text-dark shadow-sm placeholder:text-gray-400',
+              'transition-all duration-300',
+              'hover:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-100',
+              error ? 'border-error focus:border-error focus:ring-red-100' : 'border-gray-200 focus:border-primary',
               leftIcon && 'pl-10',
               rightIcon && 'pr-10',
               props.disabled && 'cursor-not-allowed bg-gray-50 opacity-60',

@@ -21,11 +21,11 @@ export interface ButtonProps
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-white shadow-md hover:bg-primary-dark hover:shadow-lg',
-  secondary: 'bg-secondary text-white shadow-md hover:bg-secondary-dark hover:shadow-lg',
-  outline: 'border border-gray-200 bg-surface text-dark hover:border-primary hover:text-primary',
-  ghost: 'bg-transparent text-dark hover:bg-gray-100',
-  danger: 'bg-error text-white shadow-md hover:brightness-95 hover:shadow-lg'
+  primary: 'bg-gradient-to-r from-sky-500 to-blue-600 text-white hover:from-sky-600 hover:to-blue-700',
+  secondary: 'bg-slate-900 text-white hover:bg-slate-800',
+  outline: 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-100',
+  ghost: 'bg-transparent text-slate-700 hover:bg-slate-100',
+  danger: 'bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700'
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -65,10 +65,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         whileTap={isDisabled ? undefined : { scale: 0.98 }}
         transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
         className={cn(
-          'inline-flex items-center justify-center rounded-xl font-medium',
-          'transition-colors transition-shadow duration-200',
-          'disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2',
+          'inline-flex items-center justify-center gap-2 rounded-2xl font-semibold',
+          'shadow-sm transition-all duration-300 ease-out hover:shadow-xl',
+          'hover:-translate-y-0.5 active:translate-y-0 active:scale-95',
+          'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-y-0',
+          'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200',
           variantStyles[variant],
           sizeStyles[size],
           fullWidth && 'w-full',

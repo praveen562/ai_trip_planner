@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Compass, Sparkles } from 'lucide-react';
+import { Plane, Sparkles } from 'lucide-react';
 
 export interface AuthLayoutProps {
   title: string;
@@ -35,7 +35,7 @@ export function AuthLayout({ title, subtitle, children, footer }: AuthLayoutProp
 
         <Link to="/" className="relative flex items-center gap-2">
           <span className="flex size-8 items-center justify-center rounded-lg bg-white/20 backdrop-blur">
-            <Compass className="size-4.5" />
+            <Plane className="size-4.5" />
           </span>
           <span className="font-display text-lg font-semibold">Naviora</span>
         </Link>
@@ -67,7 +67,7 @@ export function AuthLayout({ title, subtitle, children, footer }: AuthLayoutProp
           {/* Logo shown only when the brand panel is hidden (mobile) */}
           <Link to="/" className="mb-8 flex items-center gap-2 lg:hidden">
             <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-white">
-              <Compass className="size-4.5" />
+              <Plane className="size-4.5" />
             </span>
             <span className="font-display text-lg font-semibold text-dark">Naviora</span>
           </Link>

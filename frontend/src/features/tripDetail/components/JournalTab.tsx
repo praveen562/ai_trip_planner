@@ -59,7 +59,7 @@ export function JournalTab({ tripId }: { tripId: string }) {
             placeholder="Add a note..."
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 bg-surface px-4 py-3 text-sm text-dark placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full rounded-2xl border border-gray-200 bg-white/90 px-4 py-3 text-sm text-dark shadow-sm placeholder:text-gray-400 transition-all duration-300 hover:border-blue-300 focus:border-primary focus:outline-none focus:ring-4 focus:ring-blue-100"
           />
           <div className="flex gap-2">
             <Button size="sm" onClick={handleAdd} isLoading={addEntry.isPending}>

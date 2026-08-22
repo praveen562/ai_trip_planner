@@ -23,7 +23,7 @@ export function WelcomeHeader({ name }: WelcomeHeaderProps) {
         <p className="mt-1 text-gray-500">Here's where your trips stand.</p>
       </div>
 
-      <Button leftIcon={<Plus className="size-4.5" />} onClick={() => navigate('/trips')}>
+      <Button leftIcon={<Plus className="size-4.5" />} onClick={() => navigate('/trips/new')}>
         Plan a new trip
       </Button>
     </motion.div>

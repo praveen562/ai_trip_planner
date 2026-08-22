@@ -48,7 +48,7 @@ export function ProfileForm({ mode, defaultValues, onSubmit, onCancel, isSaving 
                 key={option}
                 type="button"
                 onClick={() => setValue('gender', option, { shouldValidate: true })}
-                className={`rounded-xl border px-3 py-2 text-sm font-medium capitalize transition-colors ${
+                className={`rounded-2xl border px-3 py-2 text-sm font-medium capitalize transition-colors ${
                   gender === option
                     ? 'border-primary bg-primary/10 text-primary'
                     : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -68,7 +68,7 @@ export function ProfileForm({ mode, defaultValues, onSubmit, onCancel, isSaving 
             id="bio"
             rows={3}
             placeholder="A little about you and how you like to travel..."
-            className="w-full rounded-xl border border-gray-200 bg-surface px-4 py-3 text-base text-dark placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full rounded-2xl border border-gray-200 bg-white/90 px-4 py-3 text-base text-dark shadow-sm placeholder:text-gray-400 transition-all duration-300 hover:border-blue-300 focus:border-primary focus:outline-none focus:ring-4 focus:ring-blue-100"
             {...register('bio')}
           />
           {errors.bio && <p className="mt-1.5 text-sm text-error">{errors.bio.message}</p>}
@@ -108,7 +108,7 @@ export function ProfileForm({ mode, defaultValues, onSubmit, onCancel, isSaving 
             id="dietary"
             rows={2}
             placeholder="Vegetarian, gluten-free, no shellfish..."
-            className="w-full rounded-xl border border-gray-200 bg-surface px-4 py-3 text-base text-dark placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full rounded-2xl border border-gray-200 bg-white/90 px-4 py-3 text-base text-dark shadow-sm placeholder:text-gray-400 transition-all duration-300 hover:border-blue-300 focus:border-primary focus:outline-none focus:ring-4 focus:ring-blue-100"
             {...register('dietaryPreferences')}
           />
         </div>
@@ -120,7 +120,7 @@ export function ProfileForm({ mode, defaultValues, onSubmit, onCancel, isSaving 
             id="accessibility"
             rows={2}
             placeholder="Wheelchair access, step-free routes..."
-            className="w-full rounded-xl border border-gray-200 bg-surface px-4 py-3 text-base text-dark placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full rounded-2xl border border-gray-200 bg-white/90 px-4 py-3 text-base text-dark shadow-sm placeholder:text-gray-400 transition-all duration-300 hover:border-blue-300 focus:border-primary focus:outline-none focus:ring-4 focus:ring-blue-100"
             {...register('accessibilityRequirements')}
           />
         </div>

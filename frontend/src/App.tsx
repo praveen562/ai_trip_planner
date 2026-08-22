@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Dashboard from './pages/Dashboard';
 import Trips from './pages/Trips';
+import CreateTrip from './pages/CreateTrip';
 import TripDetail from './pages/TripDetail';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
@@ -55,6 +56,14 @@ function AppShell() {
             element={
               <ProtectedRoute>
                 <Trips />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/trips/new"
+            element={
+              <ProtectedRoute>
+                <CreateTrip />
               </ProtectedRoute>
             }
           />

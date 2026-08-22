@@ -34,28 +34,19 @@
   --color-page: var(--background);
   --color-dark: var(--dark);
 
-  --font-display: var(--font-display);
+  --font-display: var(--font-sans);
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);
 
-  /* Large, premium rounded corners — overrides Tailwind's defaults so
-     plain rounded-lg / rounded-2xl / rounded-3xl utilities pick these up. */
-  --radius-sm: var(--nv-radius-sm);
-  --radius-md: var(--nv-radius-md);
-  --radius-lg: var(--nv-radius-lg);
-  --radius-xl: var(--nv-radius-xl);
-  --radius-2xl: var(--nv-radius-2xl);
-  --radius-3xl: var(--nv-radius-3xl);
-
-  /* Soft, ink-tinted shadows — overrides Tailwind's default pure-black
-     shadow-sm / shadow-md / shadow-lg / shadow-xl utilities. */
-  --shadow-sm: var(--nv-shadow-sm);
-  --shadow-md: var(--nv-shadow-md);
-  --shadow-lg: var(--nv-shadow-lg);
-  --shadow-xl: var(--nv-shadow-xl);
-
   --ease-premium: var(--ease-premium);
+
+  /* Radius and shadow scales intentionally left at Tailwind's defaults
+     (not overridden here) — this matches the original Naviora dashboard,
+     which relies on plain rounded-xl/rounded-2xl and shadow-sm/shadow-xl
+     utilities rather than a custom scale. Keeping the defaults means
+     every rounded-2xl / shadow-xl in the app renders identically to the
+     original design reference. */
 }
 
 /* Ensure body and html take full height */

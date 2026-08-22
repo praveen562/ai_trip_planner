@@ -67,7 +67,7 @@ export function MobileMenu({ isOpen, items, onNavigate }: MobileMenuProps) {
                   <Link
                     to="/register"
                     onClick={onNavigate}
-                    className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary text-base font-medium text-white shadow-md transition-colors hover:bg-primary-dark"
+                    className="inline-flex h-11 w-full items-center justify-center rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 text-base font-medium text-white shadow-sm transition-all hover:shadow-lg"
                   >
                     Get Started
                   </Link>
